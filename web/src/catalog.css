@@ -1,0 +1,586 @@
+/* Каталог реальных записей: те же материалы и типографика, что в паспорте подбора. */
+.apicatalog {
+  min-height: 600px;
+}
+.apicatalog-toolbar {
+  display: flex;
+  gap: 18px;
+  align-items: flex-end;
+}
+.apicatalog-search {
+  min-height: 53px;
+}
+.apicatalog-search input {
+  font-size: 14px;
+}
+.apicatalog-warehouse {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 245px;
+  max-width: 360px;
+}
+.apicatalog-warehouse > span {
+  color: #6e7c92;
+  font-size: 11px;
+  font-weight: 600;
+}
+.apicatalog-warehouse select {
+  width: 100%;
+  height: 53px;
+  padding: 0 38px 0 13px;
+  background: #fff;
+  color: #344762;
+  border: 1px solid #dee5f0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  text-overflow: ellipsis;
+}
+.apicatalog-warehouse select:focus-visible {
+  outline: 3px solid #cad8ff;
+  outline-offset: 2px;
+}
+.apicatalog-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 22px 0 15px;
+}
+.apicatalog-count {
+  color: #344762;
+  font-size: 13px;
+  font-weight: 600;
+}
+.apicatalog-source-note {
+  color: #748299;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.apicatalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  counter-reset: catalogue;
+}
+.apicatalog-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  counter-increment: catalogue;
+}
+.apicatalog-card:hover {
+  border-color: #b6c6ec;
+  box-shadow: 0 5px 22px #28477608;
+}
+.apicatalog-visual {
+  min-height: 126px;
+  position: relative;
+  background: #f0f3f8;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 12px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  color: #8a9cba;
+}
+.apicatalog-visual::before {
+  content: "";
+  position: absolute;
+  inset: 13px;
+  border: 1px solid #e0e7f1;
+  border-radius: 3px;
+  pointer-events: none;
+}
+.apicatalog-card .apicatalog-visual::after {
+  content: counter(catalogue, decimal-leading-zero);
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.3px;
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  color: #8598b8;
+}
+.apicatalog-visual > svg {
+  width: 42px;
+  height: 42px;
+  stroke-width: 1.2;
+}
+.apicatalog-visual > span {
+  color: #7a8aa4;
+  font-size: 10px;
+}
+.apicatalog-visual img {
+  position: relative;
+  max-width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  padding: 12px;
+}
+.apicatalog-card-body {
+  padding: 19px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.apicatalog-card .product-sku {
+  color: #7486a1;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.apicatalog-card h3 {
+  color: #23334e;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.6;
+  margin: 9px 0 20px;
+  min-height: 72px;
+  overflow-wrap: anywhere;
+}
+.apicatalog-card-price {
+  color: #263b5d;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  margin-top: auto;
+}
+.apicatalog-card-price > span,
+.apicatalog-card-price > small {
+  color: #8290a6;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.apicatalog-stock {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #edf0f5;
+  padding-top: 14px;
+  margin-top: 15px;
+  color: #657691;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.apicatalog-stock strong {
+  color: #334b69;
+  font-size: 13px;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+}
+.apicatalog-stock[data-stock="zero"] strong {
+  color: #a56827;
+}
+.apicatalog-stock[data-stock="unknown"] strong {
+  color: #728097;
+}
+.apicatalog-snapshot {
+  color: #76869d;
+  font-size: 10px;
+  line-height: 1.8;
+  margin-top: 13px;
+  overflow-wrap: anywhere;
+}
+.apicatalog-open {
+  margin-top: 18px;
+  width: 100%;
+  padding: 11px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--blue);
+  border-color: #dce5fa;
+  font-size: 12px;
+  background: #fafbff;
+}
+.apicatalog-open:hover {
+  background: #eef3ff;
+  border-color: #b8caf9;
+}
+.apicatalog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 24px;
+}
+.apicatalog-pagination button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #dce4f0;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 12px;
+  color: #526887;
+}
+.apicatalog-pagination button:hover:not(:disabled) {
+  color: var(--blue);
+  border-color: #a7bdec;
+}
+.apicatalog-page {
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  color: #70819d;
+}
+.apicatalog-state {
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 36px 24px;
+  background: #fff;
+  gap: 16px;
+  color: #71829e;
+  line-height: 1.8;
+  margin-top: 18px;
+}
+.apicatalog-state h3,
+.apicatalog-state h2 {
+  font-size: 21px;
+  color: #263a56;
+  letter-spacing: -0.4px;
+}
+.apicatalog-state p {
+  max-width: 520px;
+  font-size: 13px;
+}
+.apicatalog-state > svg {
+  width: 32px;
+  height: 32px;
+  color: #889fc9;
+}
+.apicatalog-error > svg {
+  color: #a56827;
+}
+.apicatalog-error {
+  border-color: #eee0ce;
+}
+.apicatalog-dialog {
+  width: 880px;
+  padding: 28px;
+}
+.apicatalog-dialog .dialog-head {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 17px;
+}
+.apicatalog-dialog .dialog-head h2 {
+  font-size: 18px;
+  line-height: 1.6;
+}
+.apicatalog-detail-hero {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 26px;
+  align-items: center;
+  margin: 22px 0;
+}
+.apicatalog-detail-hero > .apicatalog-visual {
+  margin: 0;
+  min-height: 155px;
+}
+.apicatalog-detail-heading {
+  min-width: 0;
+}
+.apicatalog-detail-heading h2,
+.apicatalog-detail-heading h3 {
+  font-size: 22px;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+  margin: 8px 0 14px;
+}
+.apicatalog-detail-heading .product-sku {
+  font-size: 11px;
+  color: #7587a4;
+}
+.apicatalog-detail-heading > p {
+  color: #75869e;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.apicatalog-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid #e8edf5;
+  border-left: 1px solid #e8edf5;
+  border-radius: 7px;
+  overflow: hidden;
+  margin: 23px 0;
+}
+.apicatalog-facts > div {
+  padding: 16px;
+  border-bottom: 1px solid #e8edf5;
+  border-right: 1px solid #e8edf5;
+  background: #fafbfd;
+}
+.apicatalog-facts dt {
+  font-size: 11px;
+  color: #6f809b;
+  line-height: 1.8;
+}
+.apicatalog-facts dd {
+  font-size: 16px;
+  color: #2f4665;
+  font-weight: 600;
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+}
+.apicatalog-section {
+  margin: 24px 0;
+}
+.apicatalog-section > h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a3d59;
+  margin: 0 0 13px;
+}
+.apicatalog-section > p {
+  font-size: 13px;
+  color: #63738c;
+  line-height: 1.9;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.apicatalog-properties {
+  border-top: 1px solid var(--line);
+}
+.apicatalog-properties > div {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: #435979;
+  line-height: 1.7;
+}
+.apicatalog-property-name {
+  min-width: 0;
+}
+.apicatalog-property-name strong {
+  display: block;
+  font-size: 12px;
+  color: #657690;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.apicatalog-property-name code {
+  display: block;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #8b97aa;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+}
+.apicatalog-properties > div > span {
+  overflow-wrap: anywhere;
+}
+.apicatalog-documents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.apicatalog-documents a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 13px;
+  border: 1px solid #dbe5f8;
+  color: var(--blue);
+  border-radius: 7px;
+  font-size: 12px;
+}
+.apicatalog-dialog > .apicatalog-snapshot {
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 1220px) {
+  .apicatalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .apicatalog-card h3 {
+    min-height: 70px;
+  }
+}
+@media (max-width: 680px) {
+  .apicatalog-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .apicatalog-warehouse {
+    max-width: none;
+    min-width: 0;
+  }
+  .apicatalog-warehouse select {
+    font-size: 14px;
+  }
+  .apicatalog-search input {
+    font-size: 16px;
+  }
+  .apicatalog-summary {
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .apicatalog-grid {
+    gap: 12px;
+  }
+  .apicatalog-card-body {
+    padding: 15px;
+  }
+  .apicatalog-card h3 {
+    font-size: 14px;
+    min-height: 90px;
+  }
+  .apicatalog-visual {
+    min-height: 95px;
+  }
+  .apicatalog-card-price {
+    font-size: 21px;
+  }
+  .apicatalog-stock {
+    flex-direction: column;
+    gap: 3px;
+  }
+  .apicatalog-dialog {
+    padding: 22px 18px;
+  }
+  .apicatalog-detail-hero {
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 16px;
+  }
+  .apicatalog-detail-hero > .apicatalog-visual {
+    min-height: 130px;
+  }
+  .apicatalog-detail-heading h2,
+  .apicatalog-detail-heading h3 {
+    font-size: 18px;
+  }
+  .apicatalog-facts > div {
+    padding: 13px;
+  }
+  .apicatalog-facts dd {
+    font-size: 14px;
+  }
+  .apicatalog-properties > div {
+    gap: 14px;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 460px) {
+  .apicatalog-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .apicatalog-card h3 {
+    min-height: 0;
+    font-size: 16px;
+  }
+  .apicatalog-visual {
+    min-height: 110px;
+  }
+  .apicatalog-card-body {
+    padding: 19px;
+  }
+  .apicatalog-stock {
+    flex-direction: row;
+  }
+  .apicatalog-card-price {
+    font-size: 24px;
+  }
+  .apicatalog-pagination {
+    gap: 10px;
+  }
+  .apicatalog-pagination button {
+    padding: 10px;
+    font-size: 11px;
+  }
+  .apicatalog-page {
+    font-size: 10px;
+  }
+  .apicatalog-detail-hero {
+    grid-template-columns: 1fr;
+  }
+  .apicatalog-detail-hero > .apicatalog-visual {
+    min-height: 100px;
+  }
+  .apicatalog-facts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .apicatalog-card {
+    transition: none;
+  }
+}
+
+.apicatalog-snapshot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.apicatalog-documents {
+  list-style: none;
+  padding: 0;
+}
+.apicatalog-documents li {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+.apicatalog-documents small {
+  font-size: 10px;
+  color: #7888a1;
+  line-height: 1.7;
+  margin-top: 5px;
+}
+.apicatalog-spinner {
+  animation: catalog-spin 1s linear infinite;
+}
+@keyframes catalog-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.apicatalog-detail-heading > p.apicatalog-card-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #263b5d;
+  line-height: 1.6;
+}
+@media (prefers-reduced-motion: reduce) {
+  .apicatalog-spinner {
+    animation: none;
+  }
+}
+
+.apicatalog-dialog .dialog-head{position:sticky;top:-28px;z-index:2;background:#fff;padding-top:15px;margin-top:-15px}.apicatalog-visual>span{text-align:center;padding:0 15px}.apicatalog-stock strong{text-align:right}.apicatalog-card-price{line-height:1.5}
+@media(max-width:680px){.apicatalog-dialog .dialog-head{top:-22px}}

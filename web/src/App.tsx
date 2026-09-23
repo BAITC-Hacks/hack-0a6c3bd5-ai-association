@@ -1,3 +1,4 @@
+import CatalogPanel from "./CatalogPanel";
 import {
   useEffect,
   useRef,
@@ -22,7 +23,6 @@ import {
   MapPin,
   MessageSquare,
   Minus,
-  Package,
   Plus,
   Search,
   ShieldCheck,
@@ -36,12 +36,17 @@ import {
   formatMoney,
   products,
   warehouseNames,
-  type PreviewProduct,
   type Warehouse,
 } from "./design-data";
 
 type Section = "workspace" | "catalog" | "cart";
-type Modal = "sources" | "confirm" | "search" | "help" | null;
+function readSection(): Section {
+  if (location.pathname === "/cart") return "cart";
+  return new URLSearchParams(location.search).get("view") === "preview"
+    ? "workspace"
+    : "catalog";
+}
+type Modal = "sources" | "confirm" | "help" | null;
 type Cart = { productId: string; quantity: number; warehouse: Warehouse };
 type Message = { role: "user" | "assistant"; text: string };
 const storageKey = "kontur-design-cart-v1";
@@ -148,9 +153,12 @@ function Dialog({
         if (event.target !== event.currentTarget) return;
         const bounds = event.currentTarget.getBoundingClientRect();
         if (
-          event.clientX < bounds.left || event.clientX > bounds.right ||
-          event.clientY < bounds.top || event.clientY > bounds.bottom
-        ) close();
+          event.clientX < bounds.left ||
+          event.clientX > bounds.right ||
+          event.clientY < bounds.top ||
+          event.clientY > bounds.bottom
+        )
+          close();
       }}
     >
       <div className="dialog-head">
@@ -169,13 +177,8 @@ function Dialog({
 }
 
 export default function App() {
-  const [section, setSection] = useState<Section>(
-    location.pathname === "/cart"
-      ? "cart"
-      : new URLSearchParams(location.search).get("view") === "catalog"
-        ? "catalog"
-        : "workspace",
-  );
+  const [section, setSection] = useState<Section>(readSection);
+  const [catalogFocus, setCatalogFocus] = useState(0);
   const [warehouse, setWarehouse] = useState<Warehouse>("astana");
   const [warehouseOpen, setWarehouseOpen] = useState(false);
   const [modal, setModal] = useState<Modal>(null);
@@ -185,8 +188,6 @@ export default function App() {
   const [cart, setCart] = useState<Cart | null>(readCart);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [query, setQuery] = useState("");
-  const [availableOnly, setAvailableOnly] = useState(false);
   const [notice, setNotice] = useState("");
   const [sourceTab, setSourceTab] = useState<"check" | "source">("check");
   const chatEnd = useRef<HTMLDivElement>(null);
@@ -197,34 +198,25 @@ export default function App() {
     selected && cart?.quantity === quantity && cart.warehouse === warehouse;
   const originalShortage = quantity > products[0].stocks[warehouse];
   const alternativeShortage = quantity > products[1].stocks[warehouse];
-  const filteredProducts = products.filter(
-    (product) =>
-      `${product.name} ${product.id} ${product.current}`
-        .toLowerCase()
-        .includes(query.toLowerCase()) &&
-      (modal === "search" ||
-        !availableOnly ||
-        product.stocks[warehouse] >= quantity),
-  );
-
   const navigate = (next: Section) => {
     setSection(next);
-    history.pushState({}, "", next === "workspace" ? "/" : next === "catalog" ? "/?view=catalog" : "/cart");
-    setQuery("");
+    history.pushState(
+      {},
+      "",
+      next === "workspace" ? "/?view=preview" : next === "cart" ? "/cart" : "/",
+    );
+  };
+  const openCatalogSearch = () => {
+    setModal(null);
+    navigate("catalog");
+    setCatalogFocus((value) => value + 1);
   };
   useEffect(() => {
-    const pop = () =>
-      setSection(
-        location.pathname === "/cart"
-          ? "cart"
-          : new URLSearchParams(location.search).get("view") === "catalog"
-            ? "catalog"
-            : "workspace",
-      );
+    const pop = () => setSection(readSection());
     const key = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
-        setModal("search");
+        openCatalogSearch();
       }
     };
     window.addEventListener("popstate", pop);
@@ -339,9 +331,9 @@ export default function App() {
           href="/"
           onClick={(event) => {
             event.preventDefault();
-            navigate("workspace");
+            navigate("catalog");
           }}
-          aria-label="Контур — рабочая область"
+          aria-label="Контур — каталог"
         >
           <BrandMark />
           <span>
@@ -362,8 +354,7 @@ export default function App() {
           className="sidebar-search"
           aria-label="Найти товар"
           onClick={() => {
-            setQuery("");
-            setModal("search");
+            openCatalogSearch();
           }}
         >
           <Search size={17} />
@@ -372,16 +363,6 @@ export default function App() {
         </button>
         <div className="nav-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
         <nav aria-label="Основная навигация">
-          <button
-            className={`nav-item ${section === "workspace" ? "active" : ""}`}
-            aria-label="Подбор с ассистентом"
-            aria-current={section === "workspace" ? "page" : undefined}
-            onClick={() => navigate("workspace")}
-          >
-            <MessageSquare size={18} />
-            <span>Подбор с ассистентом</span>
-            <span className="active-dot" />
-          </button>
           <button
             className={`nav-item ${section === "catalog" ? "active" : ""}`}
             aria-label="Каталог товаров"
@@ -392,19 +373,29 @@ export default function App() {
             <span>Каталог товаров</span>
           </button>
           <button
+            className={`nav-item ${section === "workspace" ? "active" : ""}`}
+            aria-label="Демо подбора"
+            aria-current={section === "workspace" ? "page" : undefined}
+            onClick={() => navigate("workspace")}
+          >
+            <MessageSquare size={18} />
+            <span>Демо подбора</span>
+            <span className="active-dot" />
+          </button>
+          <button
             className={`nav-item ${section === "cart" ? "active" : ""}`}
-            aria-label="Моя корзина"
+            aria-label="Демо-корзина"
             aria-current={section === "cart" ? "page" : undefined}
             onClick={() => navigate("cart")}
           >
             <ShoppingBag size={18} />
-            <span>Моя корзина</span>
+            <span>Демо-корзина</span>
             {cart && <span className="nav-count">1</span>}
           </button>
         </nav>
         <div className="sidebar-divider" />
         <div className="nav-label">
-          ТЕКУЩИЙ ПОДБОР <span>01</span>
+          ДЕМО-СЦЕНАРИЙ <span>01</span>
         </div>
         <button
           className="selection-item"
@@ -451,7 +442,7 @@ export default function App() {
             <ChevronRight size={14} />
             <strong>
               {section === "workspace"
-                ? "Новый подбор"
+                ? "Демо подбора"
                 : section === "catalog"
                   ? "Каталог"
                   : "Корзина"}
@@ -460,29 +451,34 @@ export default function App() {
           <div className="topbar-actions">
             <span className="concept-label">
               <span />
-              Дизайн-прототип
+              {section === "catalog" ? "Снимок каталога" : "Дизайн-прототип"}
             </span>
-            <div className="warehouse-control">
-              <button
-                className="warehouse-button"
-                aria-expanded={warehouseOpen}
-                onClick={() => setWarehouseOpen(!warehouseOpen)}
-              >
-                <MapPin size={15} />
-                <span>{warehouseNames[warehouse]}</span>
-                <ChevronDown size={14} />
-              </button>
-              {warehouseOpen && (
-                <div className="warehouse-menu">
-                  {(["astana", "almaty"] as Warehouse[]).map((value) => (
-                    <button key={value} onClick={() => changeWarehouse(value)}>
-                      {warehouseNames[value]}
-                      {warehouse === value && <Check size={15} />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {section !== "catalog" && (
+              <div className="warehouse-control">
+                <button
+                  className="warehouse-button"
+                  aria-expanded={warehouseOpen}
+                  onClick={() => setWarehouseOpen(!warehouseOpen)}
+                >
+                  <MapPin size={15} />
+                  <span>{warehouseNames[warehouse]}</span>
+                  <ChevronDown size={14} />
+                </button>
+                {warehouseOpen && (
+                  <div className="warehouse-menu">
+                    {(["astana", "almaty"] as Warehouse[]).map((value) => (
+                      <button
+                        key={value}
+                        onClick={() => changeWarehouse(value)}
+                      >
+                        {warehouseNames[value]}
+                        {warehouse === value && <Check size={15} />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </header>
 
@@ -504,7 +500,7 @@ export default function App() {
                   </>
                 ) : section === "catalog" ? (
                   <>
-                    Каталог<span> для вашего объекта.</span>
+                    Каталог<span> с проверяемыми данными.</span>
                   </>
                 ) : (
                   <>
@@ -516,26 +512,27 @@ export default function App() {
                 {section === "workspace"
                   ? "От списка требований — к комплекту, в котором всё сходится."
                   : section === "catalog"
-                    ? "Демонстрационные позиции. Все цены и остатки — для проверки интерфейса."
+                    ? "Товары из локального снимка ekt.kz. Поиск, характеристики и остаток выбранного склада."
                     : "Демонстрационная корзина. Заказ и резервирование в ekt.kz не выполняются."}
               </p>
             </div>
             <button
               className="new-selection"
               onClick={reset}
-              aria-label="Новый подбор"
+              aria-label={
+                section === "catalog" ? "Демо подбора" : "Новый подбор"
+              }
             >
               <Plus size={16} />
-              <span>Новый подбор</span>
+              <span>
+                {section === "catalog" ? "Демо подбора" : "Новый подбор"}
+              </span>
             </button>
           </div>
 
           {section === "workspace" && (
             <div className="workspace-grid">
-              <section
-                className="conversation"
-                aria-label="Подбор с ассистентом"
-              >
+              <section className="conversation" aria-label="Демо подбора">
                 <div className="conversation-bar">
                   <div>
                     <span className="session-dot" />
@@ -1010,86 +1007,7 @@ export default function App() {
           )}
 
           {section === "catalog" && (
-            <section className="catalog-view">
-              <div className="catalog-toolbar">
-                <label className="catalog-search">
-                  <Search size={18} />
-                  <input
-                    placeholder="Название, артикул или номинал"
-                    aria-label="Поиск по каталогу"
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                  />
-                </label>
-                <button
-                  className={`filter-button ${availableOnly ? "on" : ""}`}
-                  aria-pressed={availableOnly}
-                  onClick={() => setAvailableOnly(!availableOnly)}
-                >
-                  <SlidersHorizontal size={16} />
-                  Хватит на {quantity} шт.
-                </button>
-              </div>
-              <div className="catalog-grid">
-                {filteredProducts.map((product) => (
-                  <article className="catalog-card" key={product.id}>
-                    <Device
-                      variant={product.conflict ? "dark" : "blue"}
-                      label={
-                        product.id === "DEMO-100-3P" ? "КМ / 100" : undefined
-                      }
-                      large
-                    />
-                    <span className="product-category">УЧЕБНЫЙ КАТАЛОГ</span>
-                    <h2>{product.name}</h2>
-                    <p>{product.subtitle}</p>
-                    <div className="catalog-facts">
-                      <span>{product.current}</span>
-                      <span>{product.poles}</span>
-                      <span>{product.voltage}</span>
-                    </div>
-                    <div className="catalog-price">
-                      <strong>{formatMoney(product.price)}</strong>
-                      <span>{product.stocks[warehouse]} шт.</span>
-                    </div>
-                    <button
-                      className="catalog-select"
-                      onClick={() => {
-                        if (product.id === products[1].id) {
-                          chooseAlternative();
-                          navigate("workspace");
-                        } else if (product.conflict) {
-                          setSelected(false);
-                          navigate("workspace");
-                        } else
-                          setNotice(
-                            "Номинал 100 А не соответствует запросу 160 А. Выберите другой товар.",
-                          );
-                      }}
-                    >
-                      Проверить соответствие
-                      <ArrowRight size={16} />
-                    </button>
-                  </article>
-                ))}
-              </div>
-              {!filteredProducts.length && (
-                <div className="empty-state">
-                  <Search size={34} />
-                  <h2>Нет совпадений</h2>
-                  <p>Попробуйте «160» или отключите фильтр наличия.</p>
-                  <button
-                    className="text-link"
-                    onClick={() => {
-                      setQuery("");
-                      setAvailableOnly(false);
-                    }}
-                  >
-                    Сбросить поиск
-                  </button>
-                </div>
-              )}
-            </section>
+            <CatalogPanel focusRequest={catalogFocus} />
           )}
 
           {section === "cart" && (
@@ -1285,51 +1203,6 @@ export default function App() {
               Подтверждаю добавление
             </button>
           </div>
-        </Dialog>
-      )}
-      {modal === "search" && (
-        <Dialog
-          title="Найти товар"
-          close={() => {
-            setModal(null);
-            setQuery("");
-          }}
-        >
-          <label className="catalog-search modal-search">
-            <Search size={18} />
-            <input
-              autoFocus
-              placeholder="Например, 160 или DRX"
-              aria-label="Поиск товара"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </label>
-          <div className="search-results">
-            {filteredProducts.map((product: PreviewProduct) => (
-              <button
-                key={product.id}
-                onClick={() => {
-                  setModal(null);
-                  navigate("catalog");
-                  setQuery(product.id);
-                }}
-              >
-                <Package size={21} />
-                <span>
-                  <strong>{product.name}</strong>
-                  <small>{product.id}</small>
-                </span>
-                <ArrowRight size={17} />
-              </button>
-            ))}
-            {!filteredProducts.length && (
-              <p>В учебном каталоге нет такого товара. Попробуйте «160».</p>
-            )}
-          </div>
-          <p className="dialog-caption">
-            Поиск работает по трём позициям дизайн-прототипа.
-          </p>
         </Dialog>
       )}
       {modal === "help" && (
