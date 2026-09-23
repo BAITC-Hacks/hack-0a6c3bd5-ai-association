@@ -25,6 +25,10 @@ import {
 interface CatalogPanelProps {
   focusRequest: number;
   initialQuery?: string;
+  selectedWarehouseId?: string;
+  disabledWarehouse?: boolean;
+  onWarehouseChange?: (id: string) => void;
+  onDiscuss?: (product: Product) => void;
 }
 
 const pageSize = 6;
@@ -155,7 +159,9 @@ function ProductDialog({
   productId,
   warehouse,
   close,
+  onDiscuss,
 }: {
+  onDiscuss?: (product: Product) => void;
   productId: number;
   warehouse: Warehouse;
   close: () => void;
@@ -333,6 +339,18 @@ function ProductDialog({
                 </p>
               )}
             </section>
+            {onDiscuss && (
+              <button
+                className="primary-button catalog-discuss"
+                onClick={() => {
+                  close();
+                  onDiscuss(product);
+                }}
+              >
+                Обсудить с консультантом
+                <ArrowRight size={16} />
+              </button>
+            )}
             <p className="apicatalog-source-note">
               Данные относятся к дате снимка, единицы учёта заданы для демо.
               Описание и характеристики приведены отдельно; соответствие вашему
@@ -348,6 +366,10 @@ function ProductDialog({
 export default function CatalogPanel({
   focusRequest,
   initialQuery = "",
+  selectedWarehouseId,
+  disabledWarehouse = false,
+  onWarehouseChange,
+  onDiscuss,
 }: CatalogPanelProps) {
   const searchInput = useRef<HTMLInputElement>(null);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
@@ -365,6 +387,16 @@ export default function CatalogPanel({
   const selectedWarehouse = warehouses.find(
     (warehouse) => warehouse.id === warehouseId,
   );
+
+  useEffect(() => {
+    if (
+      selectedWarehouseId &&
+      warehouses.some((value) => value.id === selectedWarehouseId)
+    ) {
+      setWarehouseId(selectedWarehouseId);
+      setOffset(0);
+    }
+  }, [selectedWarehouseId, warehouses]);
 
   useEffect(() => {
     if (focusRequest > 0) searchInput.current?.focus();
@@ -478,9 +510,12 @@ export default function CatalogPanel({
           <span>Склад</span>
           <select
             value={warehouseId}
-            disabled={warehouseLoading || !warehouses.length}
+            disabled={
+              disabledWarehouse || warehouseLoading || !warehouses.length
+            }
             onChange={(event) => {
               setWarehouseId(event.target.value);
+              onWarehouseChange?.(event.target.value);
               setOffset(0);
             }}
             aria-label="Склад для проверки наличия"
@@ -618,6 +653,7 @@ export default function CatalogPanel({
           productId={productId}
           warehouse={selectedWarehouse}
           close={() => setProductId(null)}
+          onDiscuss={onDiscuss}
         />
       )}
     </section>

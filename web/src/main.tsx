@@ -17,6 +17,8 @@ import "@fontsource/ibm-plex-mono/latin-500.css";
 import App from "./App";
 import "./styles.css";
 import "./catalog.css";
+import "./commerce.css";
+import "./checkout.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
