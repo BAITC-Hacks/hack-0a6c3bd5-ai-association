@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "sha256": "431cdaf8bf7cb1027434c860b3604b2d58e1c68a6ba8d0fd98daa51a21fc4ebf",
+  "description": "Записанный вручную результат созданного командой демонстрационного JPEG; не реальная спецификация покупателя.",
+  "extraction": {
+    "lines": [
+      {
+        "query": "DEMO-160-AVAILABLE",
+        "quantity": 2,
+        "unit": "шт"
+      },
+      {
+        "query": "200300285_",
+        "quantity": 1,
+        "unit": "шт"
+      }
+    ],
+    "too_many_lines": false
+  }
+}

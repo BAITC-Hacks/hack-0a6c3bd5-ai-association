@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.catalog import router
 from app.api.chat import router as chat_router
+from app.api.uploads import router as uploads_router
 from app.commerce import ensure_schema
 from app.config import Settings
 from app.errors import ApiError, register_handlers
@@ -28,11 +29,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         yield
 
     # Swagger/ReDoc по умолчанию требуют CDN; контракт доступен как JSON.
-    application = FastAPI(title="Контур", version="0.2.0", docs_url=None, redoc_url=None, lifespan=lifespan)
+    application = FastAPI(title="Контур", version="0.3.0", docs_url=None, redoc_url=None, lifespan=lifespan)
     application.state.settings = settings
     register_handlers(application)
     application.include_router(router)
     application.include_router(chat_router)
+    application.include_router(uploads_router)
 
     assets = settings.data_dir / "assets"
     if assets.is_dir():

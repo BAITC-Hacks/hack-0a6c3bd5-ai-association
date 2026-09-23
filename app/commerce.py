@@ -34,6 +34,12 @@ CREATE TABLE IF NOT EXISTS messages (
     role TEXT NOT NULL, content TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
 );
+CREATE TABLE IF NOT EXISTS uploads (
+    id TEXT PRIMARY KEY,
+    session_token TEXT NOT NULL REFERENCES sessions(token),
+    content_hash TEXT NOT NULL, content BLOB NOT NULL, payload TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS uploads_session ON uploads(session_token);
 CREATE TABLE IF NOT EXISTS request_results (
     session_token TEXT NOT NULL REFERENCES sessions(token),
     operation TEXT NOT NULL, request_id TEXT NOT NULL,
@@ -87,6 +93,11 @@ class Store:
             db.execute("INSERT INTO sessions(token,cart_id) VALUES (?,?)", (token, "c_" + secrets.token_urlsafe(18)))
             return token
 
+    def clear_presented(self, token: str) -> None:
+        with connect_write(self.database_path) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            self.invalidate_proposal_in(db, token)
+
     def cart(self, token: str) -> dict:
         with connect_write(self.database_path) as db:
             # Оба чтения видят один снимок даже при параллельном подтверждении.
@@ -123,7 +134,7 @@ class Store:
                     raise ApiError(409, "IDEMPOTENCY_CONFLICT", "Этот request_id уже использован с другим содержимым.")
                 response = json.loads(previous["response"])
                 error_details = response.get("error", {}).get("details", {})
-                if operation == "chat" or "proposal" in error_details:
+                if operation in {"chat", "upload", "upload_proposal"} or "proposal" in error_details:
                     shown = response.get("proposal") if "proposal" in response else error_details.get("proposal")
                     shown_id = shown["id"] if shown else None
                     current_id = self._session(db, token)["presented_proposal_id"]
