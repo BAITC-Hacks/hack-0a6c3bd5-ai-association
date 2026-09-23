@@ -1,0 +1,26 @@
+{
+  "pdf_sha256": "0472c4e85e36d6cdd1b841187edbcd6b1f0fb98de4e6d2ed580c4d349ba7b87e",
+  "font": "DejaVu Sans",
+  "font_sha256": "7da195a74c55bef988d0d48f9508bd5d849425c1770dba5d7bfc6ce9ed848954",
+  "font_source": "DejaVuSans.ttf from the bundled Poppler runtime",
+  "font_upstream": "https://dejavu-fonts.github.io/",
+  "license_source": "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/LICENSE",
+  "license_sha256": "7a083b136e64d064794c3419751e5c7dd10d2f64c108fe5ba161eae5e5958a93",
+  "generator": "ReportLab 4.4.9",
+  "fonts": [
+    "/AAAAAA+DejaVuSans"
+  ],
+  "rows": [
+    {
+      "query": "DEMO-160-AVAILABLE",
+      "quantity": 2,
+      "unit": "шт"
+    },
+    {
+      "query": "200300285_",
+      "quantity": 1,
+      "unit": "шт"
+    }
+  ],
+  "license_attachment": "dejavu-fonts-license.txt"
+}
