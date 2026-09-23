@@ -676,3 +676,11 @@ summary:focus-visible {
 .commerce-evidence {
   border-radius: var(--radius);
 }
+
+/* На телефоне пустая панель предложения только удлиняет прокрутку:
+   пока предложения нет, его объясняет сам ответ в ленте. */
+@media (max-width: 850px) {
+  .commerce-proposal:not(.has-proposal) {
+    display: none;
+  }
+}
