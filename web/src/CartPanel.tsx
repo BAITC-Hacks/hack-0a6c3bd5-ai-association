@@ -9,8 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 import type { Cart, CartItem } from "./api";
-const money = (value: number) =>
-  `${new Intl.NumberFormat("ru-RU").format(value)} ₸`;
+import { money, plural } from "./format";
 interface Props {
   cart: Cart | null;
   ready: boolean;
@@ -129,7 +128,7 @@ export default function CartPanel({
           <span className="eyebrow">ПОДТВЕРЖДЕНО ВАМИ</span>
           <h2>
             {cart.items.length
-              ? `${cart.items.length} позиций в комплекте`
+              ? `${cart.items.length} ${plural(cart.items.length, "позиция", "позиции", "позиций")} в комплекте`
               : "Корзина пока пуста"}
           </h2>
           <p>
