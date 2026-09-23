@@ -1,0 +1,16 @@
+services:
+  kontur:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DEMO_MODE: "1"
+      DATABASE_PATH: /state/app.db
+    volumes:
+      - kontur-data:/state
+      - type: bind
+        source: ./web/dist
+        target: /app/web/dist
+        read_only: true
+volumes:
+  kontur-data:
