@@ -7,7 +7,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import type { Cart, ChatResponse, Warehouse } from "./api";
-import { fieldLabel } from "./format";
+import { fieldLabel, money } from "./format";
 import {
   ProposalComposition,
   isRemoval,
@@ -23,6 +23,7 @@ interface Props {
   ready: boolean;
   onConfirm: () => void;
   onOpenChat: () => void;
+  onOpenCart: () => void;
 }
 
 // Результат сопоставления показывается рядом со строками спецификации:
@@ -36,6 +37,7 @@ export default function UploadResult({
   ready,
   onConfirm,
   onOpenChat,
+  onOpenCart,
 }: Props) {
   const reduced = useReducedMotion();
   const { proposal, pending, expired } = usePendingProposal(
@@ -47,6 +49,14 @@ export default function UploadResult({
   );
   const removal = proposal ? isRemoval(proposal, cart) : false;
   const state = pending ? "ready" : conflicts.length ? "conflict" : "info";
+
+  if (proposal?.status === "confirmed") return (
+    <section className="upload-result state-ready" aria-label="Результат проверки по каталогу">
+      <header className="upload-result-head"><span className="step-badge">Готово</span><span className="verdict verdict-ready"><Check size={14} />Корзина обновлена</span></header>
+      <p className="upload-result-message" role="status">Предложение подтверждено.{cart ? ` Итог корзины: ${money(cart.total_kzt)}.` : ""}</p>
+      <button type="button" className="primary-button upload-result-confirm" onClick={onOpenCart}>Открыть корзину<ArrowRight size={16} /></button>
+    </section>
+  );
 
   return (
     <motion.section

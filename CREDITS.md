@@ -20,8 +20,12 @@
 | [defusedxml](https://github.com/tiran/defusedxml) | 0.7.1 | PSF-2.0; в метаданных `PSFL` | Ограниченный разбор XML внутри DOCX/XLSX |
 | [React / React DOM](https://react.dev/) | 19.3.0 / 19.3.0 | MIT | Интерфейс и его рендеринг |
 | [Lucide React](https://lucide.dev/) | 1.47.0 | ISC; производные иконки Feather — MIT | Иконки интерфейса |
-| [Manrope, пакет Fontsource](https://fontsource.org/fonts/manrope) | 5.3.0 | SIL OFL-1.1 | Основной шрифт, кириллица/латиница, начертания 400–800 |
+| [Onest, вариативный пакет Fontsource](https://fontsource.org/fonts/onest) | 5.3.1 | SIL OFL-1.1 | Основной шрифт интерфейса |
+| [Unbounded, вариативный пакет Fontsource](https://fontsource.org/fonts/unbounded) | 5.3.0 | SIL OFL-1.1 | Акцентная типографика интерфейса |
 | [IBM Plex Mono, пакет Fontsource](https://fontsource.org/fonts/ibm-plex-mono) | 5.3.0 | SIL OFL-1.1 | Артикулы и служебные подписи, начертания 400 и 500 |
+| [Motion](https://github.com/motiondivision/motion) | 13.4.1 | MIT | Анимации компонентов и переходов |
+| [NumberFlow React](https://github.com/barvian/number-flow) | 0.6.2 | MIT | Анимация числовых значений и суммы предложения |
+| [clsx](https://github.com/lukeed/clsx) | 2.1.1 | MIT | Условное объединение CSS-классов |
 | [Vite](https://vite.dev/) | 8.3.0 | MIT | Сборка интерфейса |
 | [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react) | 6.1.1 | MIT | Поддержка React в Vite |
 | [Tailwind CSS / @tailwindcss/vite](https://tailwindcss.com/) | 4.3.3 / 4.3.3 | MIT | Стили и обработка CSS при сборке |
@@ -33,7 +37,7 @@
 | [pytest](https://github.com/pytest-dev/pytest) | 9.1.1 | MIT | Автоматические проверки backend |
 | [Hatchling](https://github.com/pypa/hatch/tree/master/backend) | 1.32.4 в локальном кэше сборки | MIT | Сборка Python-пакета; в `pyproject.toml` задан диапазон `>=1.27,<2`, точная версия не входит в `uv.lock` |
 
-Версии Fontsource относятся к пакетам шрифтов. Правообладатели: Manrope Project Authors, 2019; IBM Corp., 2017. В [лицензии Lucide](web/public/licenses/lucide.txt) сохранено отдельное уведомление Cole Bemis / Feather для производных иконок. Полные тексты лицензий [Manrope](web/public/licenses/manrope.txt), [IBM Plex Mono](web/public/licenses/ibm-plex-mono.txt), [React](web/public/licenses/react.txt) и [React DOM](web/public/licenses/react-dom.txt) включены в `web/public/licenses` и готовую сборку `web/dist/licenses`. Шрифты и иконки поставляются локально, без CDN.
+Версии Fontsource относятся к пакетам шрифтов. Правообладатели: Onest Project Authors, 2021; Unbounded Project Authors, 2022; IBM Corp., 2017. В [лицензии Lucide](web/public/licenses/lucide.txt) сохранено отдельное уведомление Cole Bemis / Feather для производных иконок. Полные тексты лицензий [Onest](web/public/licenses/onest.txt), [Unbounded](web/public/licenses/unbounded.txt), [IBM Plex Mono](web/public/licenses/ibm-plex-mono.txt), [React](web/public/licenses/react.txt), [React DOM](web/public/licenses/react-dom.txt), [Motion](web/public/licenses/motion.txt), [NumberFlow](web/public/licenses/number-flow.txt) и [clsx](web/public/licenses/clsx.txt) включены в `web/public/licenses` и копируются в сборку. Шрифты и иконки поставляются локально, без CDN. Manrope использовался в предыдущем интерфейсе; его лицензия сохранена для исторических материалов, но текущая версия шрифт не импортирует.
 
 Транзитивные зависимости перечислены в lock-файлах; их собственные лицензии и уведомления поставляются с пакетами (`*.dist-info`, `LICENSE`, `NOTICE`, `ThirdPartyNoticeText.txt`). В частности, файл лицензии Pillow содержит уведомления о включённых сторонних библиотеках. Lock-файл фиксирует состав и версии, но не заменяет эти тексты. Recharts в текущие зависимости и сборку не включён: экранов с графиками пока нет.
 
@@ -56,7 +60,7 @@
 | Команда «Контур»: `000-DEMO-UNKNOWN`, `DEMO-160-AVAILABLE`, `DEMO-160-EMPTY` | Три синтетические карточки с учебными характеристиками, ценами и остатками, `source_url=null`; не реальные предложения ekt.kz | Материалы команды для демонстрации; отдельная лицензия проекта в репозитории не задана. |
 | [fixtures/consultant.json](fixtures/consultant.json) и [purchase_terms.json](data/purchase_terms.json) | Подготовленные формулировки демосценариев и условия самого прототипа. Факты, проверки и суммы вычисляются по SQLite. | Материалы команды; тексты не объявляются подтверждёнными условиями магазина или результатами оплаченного вызова модели. |
 | [fixtures/uploads](fixtures/uploads) и точные копии в [web/public/examples](web/public/examples) | Созданные командой `sample.xlsx`, `sample.docx`, `sample.pdf`, `sample.jpg`: две учебные строки; не документы реального покупателя. [jpeg.json](fixtures/uploads/jpeg.json) содержит вручную записанное извлечение и SHA-256 известного JPEG. | Материалы команды с использованными сторонними средствами подготовки; сведения о PDF и его шрифте приведены ниже. Сам по себе fixture не удостоверяет вызов OCR-провайдера. |
-| Интерфейс, знак «Контур», favicon и скриншоты в `docs/assets` | Собственные компоненты и оформление; знак выполнен CSS/SVG, скриншоты показывают интерфейс проекта | Работа команды с помощью Codex; встроенные шрифты и иконки сохраняют лицензии, указанные выше. |
+| Интерфейс, знак «Контур», favicon и скриншоты в `docs/assets` | Собственные компоненты и оформление; знак выполнен CSS/SVG, скриншоты показывают версии интерфейса проекта | Работа команды с помощью Claude и Codex: редизайн Claude интегрирован, Codex проверяет интеграцию. Встроенные шрифты и иконки сохраняют лицензии, указанные выше. |
 
 В исходном JSON каталога сохранены внешние URL изображений. Сами товарные фотографии и сертификаты не включены в нормализованный каталог и статическую сборку; права на них проекту не приписываются.
 
@@ -64,6 +68,7 @@
 
 ## Инструменты разработки
 
+- Claude (Anthropic) — подготовка интегрированного редизайна интерфейса. Конкретная версия модели в репозитории не зафиксирована; Claude не вызывается приложением при запуске.
 - OpenAI Codex — помощь в реализации, дизайне, проверках и документации; журнал задач находится в [docs/codex-log.md](docs/codex-log.md). На машине проверки доступен `codex-cli 0.154.0-alpha.6.1`. Версия CLI не определяет модель агента и не является зависимостью приложения.
 - Python 3.12; локально проверено на CPython 3.12.13 со SQLite 3.53.1 из стандартного модуля `sqlite3`. Для установки и запуска используется `uv` (локально 0.11.21); fallback — `pip` и [requirements.txt](requirements.txt).
 - Node.js и npm нужны для разработки и пересборки UI: локально 26.3.1 и 11.16.0 соответственно. При запуске готового `web/dist` Node.js не нужен. Git используется для совместной работы; Docker Compose предусмотрен как альтернативный способ запуска.

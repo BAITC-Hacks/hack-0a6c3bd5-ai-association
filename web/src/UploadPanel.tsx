@@ -37,6 +37,7 @@ interface UploadPanelProps {
   onPropose: () => Promise<void>;
   onReset: () => void;
   onOpenChat: () => void;
+  onOpenCart: () => void;
 }
 
 const maxFileSize = 10 * 1024 * 1024;
@@ -82,6 +83,7 @@ export default function UploadPanel({
   onPropose,
   onReset,
   onOpenChat,
+  onOpenCart,
 }: UploadPanelProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -385,6 +387,7 @@ export default function UploadPanel({
               ready={ready}
               onConfirm={onConfirm}
               onOpenChat={onOpenChat}
+              onOpenCart={onOpenCart}
             />
           </div>
         )}

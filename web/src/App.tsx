@@ -511,6 +511,7 @@ export default function App() {
               onPropose={commerce.proposeDocument}
               onReset={commerce.resetDocument}
               onOpenChat={() => navigate("workspace")}
+              onOpenCart={() => navigate("cart")}
             />
           )}
           {section === "catalog" && (
