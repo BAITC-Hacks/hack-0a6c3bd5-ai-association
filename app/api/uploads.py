@@ -96,6 +96,7 @@ async def upload(request: Request):
         # Исходник хранится только в локальной БД, не публикуется как статический файл.
         db.execute("INSERT INTO uploads(id,session_token,content_hash,content,payload) VALUES (?,?,?,?,?)",
                    (result["upload_id"], session, digest, content, canonical(result)))
+        store.supersede_pending_in(db, session)
         return result
 
     status, result = await run_in_threadpool(store.execute, token, "upload", key,
@@ -123,7 +124,11 @@ def upload_proposal(upload_id: str, body: UploadProposalRequest, request: Reques
         products = [product_from_row(row, body.warehouse_id) for row in rows]
         answer = match_upload_lines([line.model_dump() for line in body.lines], products, current)
         items = answer.pop("items", None)
-        proposal = store.create_proposal(db, session, body.warehouse_id, items) if items else None
+        if items:
+            proposal = store.create_proposal(db, session, body.warehouse_id, items)
+        else:
+            store.supersede_pending_in(db, session)
+            proposal = None
         store.mark_presented_in(db, session, proposal["id"] if proposal else None)
         result = ChatResponse.model_validate({**answer, "proposal": proposal, "confirmation_required": proposal is not None, "cart": current}).model_dump(mode="json")
         store.record_message_in(db, session, "assistant", result["message"])

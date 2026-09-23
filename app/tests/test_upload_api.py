@@ -240,3 +240,87 @@ def test_cross_origin_error_cannot_invalidate_own_confirmation(client):
     assert upload(client, headers={"Origin": "https://evil.example"}).status_code == 403
     response = client.post("/api/chat", json={"message": "да, добавь", "warehouse_id": "astana", "request_id": str(uuid4())})
     assert response.json()["cart"]["total_kzt"] == 122000
+
+
+@pytest.mark.parametrize("source", ["chat", "upload"])
+def test_new_upload_in_another_tab_supersedes_pending_proposal(client, settings, source):
+    if source == "chat":
+        old = client.post("/api/chat", json={"message": "Добавь 2 шт DEMO-160-AVAILABLE",
+            "warehouse_id": "astana", "request_id": str(uuid4())}).json()
+    else:
+        old = proposal(client, upload(client).json()).json()
+    assert old["proposal"] is not None
+    # Два клиента с одной cookie воспроизводят две вкладки браузера.
+    with TestClient(create_app(settings)) as second_tab:
+        second_tab.cookies.set("kontur_session", client.cookies.get("kontur_session"))
+        assert upload(second_tab).status_code == 200
+    response = confirm(client, old)
+    assert response.status_code == 409, response.text
+    assert response.json()["error"]["code"] == "PROPOSAL_SUPERSEDED"
+    assert client.get("/api/cart").json()["items"] == []
+    assert client.get("/api/cart").json()["version"] == 0
+    assert confirm(client, old).status_code == 409
+    fresh = proposal(client, upload(client).json()).json()
+    assert confirm(client, fresh).json()["cart"]["total_kzt"] == 122000
+
+
+def test_successful_review_without_proposal_supersedes_old_selection(client):
+    saved = upload(client).json()
+    review_key = str(uuid4())
+    old = proposal(client, saved, key=review_key).json()
+    blocked = proposal(client, saved, lines=[{**saved["lines"][0], "query": "200300285_"}])
+    assert blocked.status_code == 200
+    assert blocked.json()["proposal"] is None
+    # Повтор сохранённого ответа не возвращает старому предложению действительность.
+    assert proposal(client, saved, key=review_key).json() == old
+    response = confirm(client, old)
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "PROPOSAL_SUPERSEDED"
+    assert client.get("/api/cart").json()["items"] == []
+
+
+def test_replayed_upload_does_not_supersede_newer_proposal(client):
+    content, upload_key = xlsx(), str(uuid4())
+    saved = upload(client, content, key=upload_key).json()
+    current = proposal(client, saved).json()
+    assert upload(client, content, key=upload_key).json() == saved
+    # Сетевой повтор той же загрузки не является новым документом.
+    assert confirm(client, current).json()["cart"]["total_kzt"] == 122000
+
+
+def test_rejected_upload_preserves_explicit_proposal_confirmation(client):
+    old = proposal(client, upload(client).json()).json()
+    assert upload(client, b"not-pdf", name="broken.pdf").status_code == 415
+    # Ошибка очищает только краткое «да», но не отменяет явно выбранный ID.
+    assert confirm(client, old).json()["cart"]["total_kzt"] == 122000
+
+
+def test_upload_supersedes_only_its_own_session(client, settings):
+    old = proposal(client, upload(client).json()).json()
+    with TestClient(create_app(settings)) as other_session:
+        other_session.post("/api/session", json={})
+        assert upload(other_session).status_code == 200
+    assert confirm(client, old).json()["cart"]["total_kzt"] == 122000
+
+
+def test_new_upload_keeps_confirmed_proposal_retry_idempotent(client):
+    old = proposal(client, upload(client).json()).json()
+    assert confirm(client, old).json()["cart"]["total_kzt"] == 122000
+    assert upload(client).status_code == 200
+    repeated = confirm(client, old)
+    assert repeated.status_code == 200
+    assert repeated.json()["cart"]["items"][0]["quantity"] == 2
+    assert repeated.json()["cart"]["version"] == 1
+
+
+
+def test_rejected_review_preserves_explicit_proposal_confirmation(client):
+    saved = upload(client).json()
+    assert confirm(client, proposal(client, saved).json()).status_code == 200
+    old = proposal(client, saved, lines=[{**saved["lines"][0], "quantity": 3}]).json()
+    rejected = proposal(client, saved, warehouse="almaty")
+    assert rejected.status_code == 409
+    assert rejected.json()["error"]["code"] == "CART_WAREHOUSE_CONFLICT"
+    confirmed = confirm(client, old)
+    assert confirmed.status_code == 200, confirmed.text
+    assert confirmed.json()["cart"]["items"][0]["quantity"] == 3

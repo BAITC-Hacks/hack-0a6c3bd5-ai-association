@@ -181,6 +181,11 @@ class Store:
     def invalidate_proposal_in(self, db, token: str) -> None:
         self.mark_presented_in(db, token, None)
 
+    def supersede_pending_in(self, db, token: str) -> None:
+        """Новый документ отменяет старые предложения, включая открытые в другой вкладке."""
+        self.invalidate_proposal_in(db, token)
+        db.execute("UPDATE proposals SET status='superseded' WHERE session_token=? AND status='pending'", (token,))
+
     def last_proposal_in(self, db, token: str) -> dict | None:
         session = self._session(db, token)
         row = db.execute("SELECT * FROM proposals WHERE id=? AND session_token=? AND status='pending'",
@@ -244,7 +249,7 @@ class Store:
         if proposal["status"] == "confirmed":
             return {"proposal_id": proposal_id, "status": "confirmed", "cart": cart}
         if proposal["status"] == "superseded":
-            raise ApiError(409, "PROPOSAL_SUPERSEDED", "Предложение заменено новым. Подтвердите актуальное предложение.")
+            raise ApiError(409, "PROPOSAL_SUPERSEDED", "Предложение больше неактуально. Запросите новое и подтвердите его.")
         if proposal["status"] == "expired" or datetime.fromisoformat(proposal["expires_at"]) <= datetime.now(UTC):
             db.execute("UPDATE proposals SET status='expired' WHERE id=?", (proposal_id,))
             self.invalidate_proposal_in(db, token)

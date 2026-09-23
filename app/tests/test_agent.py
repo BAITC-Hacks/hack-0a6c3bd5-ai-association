@@ -197,3 +197,75 @@ def test_demo_analog_does_not_hide_explicit_pole_requirement(catalog):
     assert found["answer_source"] == "fixture"
     not_found = consult("Подбери 2 штуки на 160 А 1 полюс", catalog, {"items": []}, True)
     assert not not_found["products"]
+
+
+@pytest.mark.parametrize("message", ["Есть DEMO-160-EMPTY?", "Есть 2 шт DEMO-160-EMPTY?", "Добавь 2 шт DEMO-160-EMPTY"])
+def test_zero_stock_proactively_explains_analog_without_proposal(catalog, message):
+    result = consult(message, catalog, {"items": []}, True)
+    assert [p["sku"] for p in result["products"]] == ["DEMO-160-EMPTY", "DEMO-160-AVAILABLE"]
+    assert "На выбранном складе товара нет" in result["message"]
+    assert "Проверены ток 160 А" in result["message"]
+    assert "полюсов" in result["message"] and "отключающая способность" in result["message"]
+    assert result["items"] is None
+
+
+@pytest.mark.parametrize("stock", [None, 1])
+def test_auto_analog_requires_confirmed_zero_stock(catalog, stock):
+    product = next(p for p in catalog if p["sku"] == "DEMO-160-EMPTY")
+    product["available_quantity"] = stock
+    result = consult("Есть DEMO-160-EMPTY?", catalog, {"items": []}, True)
+    assert result["products"] == [product]
+    assert result["items"] is None
+
+
+@pytest.mark.parametrize("message", [
+    "Есть 13 шт DEMO-160-EMPTY?",
+    "Есть 2 м DEMO-160-EMPTY?",
+    "Есть 2 шт DEMO-160-EMPTY на 1 полюс?",
+    "Есть 2 шт DEMO-160-EMPTY на 230 В?",
+    "Есть 2 шт DEMO-160-EMPTY на 6 кА?",
+    "Есть 2 шт DEMO-160-EMPTY на 50 А?",
+    "Есть 1.5 шт DEMO-160-EMPTY?",
+    "Есть 0 шт DEMO-160-EMPTY?",
+])
+def test_auto_analog_honors_requested_quantity_units_and_specs(catalog, message):
+    result = consult(message, catalog, {"items": []}, True)
+    assert [p["sku"] for p in result["products"]] == ["DEMO-160-EMPTY"]
+    assert result["items"] is None
+
+
+@pytest.mark.parametrize("changes", [
+    {"available_quantity": 0, "total_quantity": 100},
+    {"available_quantity": None},
+    {"min_order_quantity": 3},
+    {"min_order_quantity": None},
+    {"price_kzt": None},
+    {"warehouse_id": "almaty"},
+    {"unit": "м"},
+    {"description": "Автоматический выключатель 160 А 1P 400 В 18 кА"},
+])
+def test_auto_analog_never_ignores_candidate_blockers(catalog, changes):
+    candidate = next(p for p in catalog if p["sku"] == "DEMO-160-AVAILABLE")
+    candidate.update(changes)
+    result = consult("Есть 2 шт DEMO-160-EMPTY?", catalog, {"items": []}, True)
+    assert [p["sku"] for p in result["products"]] == ["DEMO-160-EMPTY"]
+    assert "не найдено" in result["message"]
+    assert result["items"] is None
+
+
+def test_auto_analog_does_not_assume_reference_current(catalog):
+    product = next(p for p in catalog if p["sku"] == "DEMO-160-EMPTY")
+    product["description"] = "Автоматический выключатель на 250 А"
+    result = consult("Есть DEMO-160-EMPTY на 160 А?", catalog, {"items": []}, True)
+    assert result["products"] == [product]
+    assert "номинальный ток исходного товара не подтверждён" in result["message"]
+    assert result["items"] is None
+
+
+@pytest.mark.parametrize("message", ["Удали DEMO-160-EMPTY", "Удали аналог DEMO-160-EMPTY"])
+def test_remove_zero_stock_product_does_not_switch_to_analog(catalog, message):
+    product = next(p for p in catalog if p["sku"] == "DEMO-160-EMPTY")
+    cart = {"items": [{"product_id": product["id"], "quantity": 2}]}
+    result = consult(message, catalog, cart, True)
+    assert result["products"] == [product]
+    assert result["items"] == [{"product_id": product["id"], "target_quantity": 0}]

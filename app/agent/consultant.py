@@ -92,6 +92,8 @@ def consult(message: str, products: list[dict], cart: dict, demo_mode: bool) -> 
             is_analog = live_meaning.intent == "analog"
             current = live_meaning.current_a if is_analog else current
 
+    auto_analog = bool(len(selected) == 1 and type(selected[0].get("available_quantity")) is int and selected[0]["available_quantity"] == 0 and not is_remove)
+
     def reply(facts: str, found: list[dict] | None = None, items: list[dict] | None = None, kind: str = "product") -> dict:
         found = selected if found is None else found
         if live_meaning and live_meaning.intent != "unknown":
@@ -109,7 +111,7 @@ def consult(message: str, products: list[dict], cart: dict, demo_mode: bool) -> 
         return reply("Укажите один целый номинальный ток в амперах; противоречивое или дробное требование нуждается в уточнении.", kind="clarify")
     if len(selected) > 1:
         return reply("Найдено несколько артикулов. Укажите один артикул и целое количество для одного предложения.", kind="clarify")
-    if invalid_quantity and (is_change or is_remove or is_analog):
+    if invalid_quantity and (is_change or is_remove or is_analog or auto_analog):
         return reply("Укажите одно целое неотрицательное количество. Дробное количество не округляется.", kind="clarify")
     if terms_request and not (is_change or is_remove):
         try:
@@ -125,14 +127,29 @@ def consult(message: str, products: list[dict], cart: dict, demo_mode: bool) -> 
             items = [{"product_id": item["product_id"], "target_quantity": 0} for item in cart.get("items", [])]
             return reply("Подготовлено удаление всех строк. Требуется отдельное подтверждение." if items else "Корзина уже пуста.", [], items or None, "proposal")
         return reply("Укажите точный артикул строки, которую нужно удалить.", [], kind="clarify")
-    if is_analog or (current is not None and not selected):
+    if not is_remove and (is_analog or auto_analog or (current is not None and not selected)):
         reference = selected[0] if selected else None
+        prefix = _summary(reference) + "\n\nНа выбранном складе товара нет. " if auto_analog else ""
+        if quantity == 0:
+            return reply(prefix + "Укажите положительное целое количество для подбора аналога.", kind="clarify")
+        if auto_analog:
+            verified = consistent_spec(reference, "current_a")
+            if verified is None or (current is not None and verified != str(current)):
+                return reply(prefix + "Проверенный аналог нельзя выбрать: номинальный ток исходного товара не подтверждён или не совпадает с требованием. Уточните характеристики.", kind="analog")
         if current is None and reference:
             verified = consistent_spec(reference, "current_a")
             current = int(verified) if verified and verified.isdigit() else None
         if current is None:
-            return reply("Уточните требуемый номинальный ток в амперах. При противоречии источников нельзя выбрать его за вас.", kind="clarify")
+            return reply(prefix + "Уточните требуемый номинальный ток в амперах. При противоречии источников нельзя выбрать его за вас.", kind="clarify")
         matches = [p for p in products if (not reference or p["id"] != reference["id"]) and analog_matches(p, reference, current)]
+        if reference:
+            matches = [p for p in matches if p.get("warehouse_id") == reference.get("warehouse_id") and p.get("unit") == reference.get("unit")]
+        requested_units = []
+        if re.search(r"\d+\s*(?:м|метр(?:а|ов)?)(?!\w)", without_sku):
+            requested_units.append("м")
+        if re.search(r"\d+\s*(?:шт(?:ук[аи]?)?\.?|штук[аи]?)(?!\w)", without_sku):
+            requested_units.append("шт")
+        matches = [p for p in matches if all(p["unit"] == unit for unit in requested_units)]
         for field in ("poles", "voltage_v", "breaking_capacity_ka"):
             requested = specification_sources({"name": without_sku}, field)
             if requested:
@@ -141,18 +158,18 @@ def consult(message: str, products: list[dict], cart: dict, demo_mode: bool) -> 
         if quantity is not None:
             matches = [p for p in matches if not purchase_blockers(p, quantity)]
         if not matches:
-            return reply(f"Проверенного доступного аналога на {current} А с достаточными данными не найдено. Уточните характеристики или выберите другой склад.", kind="analog")
+            return reply(prefix + f"Проверенного доступного аналога на {current} А с достаточными данными не найдено. Уточните характеристики или выберите другой склад.", kind="analog")
         matches.sort(key=lambda p: (p["price_kzt"], p["sku"]))
-        explanation = f"Проверены ток {current} А, тип изделия и отсутствие блокирующих противоречий."
+        explanation = f"Доступные аналоги. Проверены ток {current} А, тип изделия и отсутствие блокирующих противоречий."
         if reference:
             explanation += " Также совпадают число полюсов, номинальное напряжение и отключающая способность."
         else:
             explanation += " Это подбор по току; для полной совместимости уточните полюса, напряжение и отключающую способность."
         found = matches[:3]
-        facts = explanation + "\n\n" + "\n\n".join(_summary(p) for p in found)
+        facts = prefix + explanation + "\n\n" + "\n\n".join(_summary(p) for p in found)
         # Подбор сам по себе показывает выбор; покупка требует однозначного артикула.
         facts += "\n\nДля предложения покупки укажите точный артикул и целое количество."
-        return reply(facts, found, kind="analog")
+        return reply(facts, ([reference] if auto_analog else []) + found, kind="analog")
     if not selected:
         # Текстовый поиск только информирует, никогда не угадывает артикул для покупки.
         words = [w for w in re.findall(r"[а-яёa-z]{4,}", text) if w not in {"покажи", "найди", "товар", "товары", "нужен", "нужна", "есть", "цена", "наличие", "сколько"}]

@@ -191,3 +191,24 @@ def test_replayed_old_chat_cannot_confirm_new_proposal(client):
     assert replay.json() == first.json()
     chat(client, "да добавь")
     assert client.get("/api/cart").json()["items"] == []
+
+
+@pytest.mark.parametrize("message", ["Есть DEMO-160-EMPTY?", "Добавь 2 шт DEMO-160-EMPTY"])
+def test_zero_stock_analog_keeps_cart_unchanged_without_confirmation(client, message):
+    response = chat(client, message)
+    assert response.status_code == 200, response.text
+    result = response.json()
+    assert [p["sku"] for p in result["products"]] == ["DEMO-160-EMPTY", "DEMO-160-AVAILABLE"]
+    assert result["proposal"] is None
+    assert result["confirmation_required"] is False
+    assert result["cart"]["items"] == []
+    assert chat(client, "да добавь").json()["cart"]["items"] == []
+    assert client.get("/api/cart").json()["items"] == []
+
+
+def test_auto_analog_uses_only_selected_warehouse(client):
+    result = chat(client, "Есть DEMO-160-EMPTY?", warehouse="shymkent").json()
+    assert [p["sku"] for p in result["products"]] == ["DEMO-160-EMPTY"]
+    assert "не найдено" in result["message"]
+    assert result["proposal"] is None
+    assert client.get("/api/cart").json()["items"] == []
