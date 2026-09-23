@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.uv/
+*.egg-info/
+
+# Node (сборка фронта — см. исключение ниже)
+node_modules/
+.vite/
+
+# ВАЖНО: web/dist НЕ игнорируем — он коммитится,
+# чтобы проверяющему не требовался Node для запуска (см. AGENTS.md)
+!web/dist/
+!web/dist/**
+
+# Данные и секреты
+data/*.db
+data/*.db-journal
+.env
+.env.local
+
+# Окружение
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Codex
+.codex/sessions/
