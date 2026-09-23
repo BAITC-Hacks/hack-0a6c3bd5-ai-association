@@ -97,6 +97,7 @@ async def upload(request: Request):
         db.execute("INSERT INTO uploads(id,session_token,content_hash,content,payload) VALUES (?,?,?,?,?)",
                    (result["upload_id"], session, digest, content, canonical(result)))
         store.supersede_pending_in(db, session)
+        store.remember_products_in(db, session, [], warehouse)
         return result
 
     status, result = await run_in_threadpool(store.execute, token, "upload", key,
@@ -131,6 +132,7 @@ def upload_proposal(upload_id: str, body: UploadProposalRequest, request: Reques
             proposal = None
         store.mark_presented_in(db, session, proposal["id"] if proposal else None)
         result = ChatResponse.model_validate({**answer, "proposal": proposal, "confirmation_required": proposal is not None, "cart": current}).model_dump(mode="json")
+        store.remember_products_in(db, session, result["products"], body.warehouse_id)
         store.record_message_in(db, session, "assistant", result["message"])
         return result
 

@@ -18,6 +18,11 @@ CREATE TABLE IF NOT EXISTS sessions (
     cart_version INTEGER NOT NULL DEFAULT 0,
     warehouse_id TEXT, presented_proposal_id TEXT
 );
+CREATE TABLE IF NOT EXISTS chat_context (
+    session_token TEXT PRIMARY KEY REFERENCES sessions(token),
+    product_id INTEGER NOT NULL, warehouse_id TEXT NOT NULL,
+    selection_warehouse_id TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS cart_items (
     session_token TEXT NOT NULL REFERENCES sessions(token),
     product_id INTEGER NOT NULL, payload TEXT NOT NULL,
@@ -113,6 +118,23 @@ class Store:
                 "warehouse_id": session["warehouse_id"], "items": items,
                 "total_kzt": sum(item["line_total_kzt"] for item in items),
                 "cart_url": "/cart", "scope": "local_demo"}
+
+    def chat_context_in(self, db, token: str) -> dict | None:
+        self._session(db, token)
+        row = db.execute("SELECT product_id,warehouse_id,selection_warehouse_id FROM chat_context WHERE session_token=?", (token,)).fetchone()
+        return dict(row) if row else None
+
+    def remember_products_in(self, db, token: str, products: list[dict], selection_warehouse_id: str) -> None:
+        self._session(db, token)
+        if len(products) != 1:
+            db.execute("DELETE FROM chat_context WHERE session_token=?", (token,))
+            return
+        product = products[0]
+        # Храним только выбор: цену, остаток и характеристики перечитываем из каталога.
+        db.execute("""INSERT INTO chat_context VALUES (?,?,?,?)
+            ON CONFLICT(session_token) DO UPDATE SET product_id=excluded.product_id,
+            warehouse_id=excluded.warehouse_id,selection_warehouse_id=excluded.selection_warehouse_id""",
+            (token, product["id"], product["warehouse_id"], selection_warehouse_id))
 
     def record_message_in(self, db, token: str, role: str, content: str) -> None:
         self._session(db, token)

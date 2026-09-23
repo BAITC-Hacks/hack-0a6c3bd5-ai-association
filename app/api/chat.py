@@ -42,6 +42,7 @@ def confirm(proposal_id: str, body: ConfirmRequest, request: Request):
 @router.post("/chat", response_model=ChatResponse)
 def chat(body: ChatRequest, request: Request):
     from app.agent.consultant import consult
+    from app.agent.context import resolve_context
 
     store, token = get_store(request), session_token(request)
 
@@ -71,12 +72,25 @@ def chat(body: ChatRequest, request: Request):
             store.invalidate_proposal_in(db, session)
             rows = db.execute("SELECT p.payload,s.quantity FROM products p LEFT JOIN stock s ON s.product_id=p.id AND s.warehouse_id=? ORDER BY p.sku,p.id", (body.warehouse_id,)).fetchall()
             products = [product_from_row(row, body.warehouse_id) for row in rows]
-            answer = consult(body.message, products, current, request.app.state.settings.demo_mode)
+            warehouses = [dict(row) for row in db.execute("SELECT id,city FROM warehouses ORDER BY position")]
+            query = resolve_context(body.message, products, warehouses, store.chat_context_in(db, session), body.warehouse_id)
+            if query.clarification:
+                answer = {"message": query.clarification, "products": [], "checks": [], "items": None, "answer_source": "rules"}
+            else:
+                if query.warehouse_id != body.warehouse_id:
+                    rows = db.execute("SELECT p.payload,s.quantity FROM products p LEFT JOIN stock s ON s.product_id=p.id AND s.warehouse_id=? ORDER BY p.sku,p.id", (query.warehouse_id,)).fetchall()
+                    products = [product_from_row(row, query.warehouse_id) for row in rows]
+                answer = consult(query.message, products, current, request.app.state.settings.demo_mode)
+                if query.warehouse_id != body.warehouse_id:
+                    city = next(w["city"] for w in warehouses if w["id"] == query.warehouse_id)
+                    answer["message"] = f"Справка по складу «{city}». Для покупки с этого склада выберите его в интерфейсе.\n\n" + answer["message"]
             items = answer.pop("items", None)
             proposal = store.create_proposal(db, session, body.warehouse_id, items) if items else None
             result = {**answer, "proposal": proposal, "cart": store.cart_in(db, session), "confirmation_required": proposal is not None}
             store.mark_presented_in(db, session, proposal["id"] if proposal else None)
         validated = ChatResponse.model_validate(result).model_dump(mode="json")
+        if phrase not in CONFIRMATIONS:
+            store.remember_products_in(db, session, validated["products"], body.warehouse_id)
         store.record_message_in(db, session, "assistant", validated["message"])
         return validated
 
