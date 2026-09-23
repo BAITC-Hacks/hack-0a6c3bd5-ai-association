@@ -1,0 +1,23 @@
+# В образ входят только исходники и поставляемые данные.
+**
+!Dockerfile
+!requirements.txt
+!app/
+!app/**
+!data/
+!data/*.csv
+!data/*.json
+!fixtures/
+!fixtures/**
+
+# Локальные результаты, секреты и средства разработки не поставляются.
+**/__pycache__/
+**/*.py[cod]
+app/tests/
+fixtures/cache/
+**/.env
+**/.env.*
+**/*.db
+**/*.db-*
+**/*.sqlite*
+**/*.log

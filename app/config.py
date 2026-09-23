@@ -4,9 +4,32 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def configure_serve_mode(mode: str | None) -> None:
+    """Явный режим CLI действует только в запускаемом процессе."""
+    if mode is None:
+        return
+    if mode == "demo":
+        os.environ["DEMO_MODE"] = "1"
+        return
+    if mode != "live":
+        raise ValueError("Режим запуска должен быть demo или live.")
+
+    # Для явного live локальные доступы важнее устаревшего окружения терминала.
+    values = dotenv_values(ROOT / ".env", encoding="utf-8-sig", interpolate=False)
+    access = {
+        name: (values.get(name, os.getenv(name, "")) or "").strip()
+        for name in ("OPENAI_API_KEY", "OPENAI_MODEL")
+    }
+    if not all(access.values()):
+        raise ValueError("Для live укажите OPENAI_API_KEY и OPENAI_MODEL в локальном .env или окружении запуска.")
+    os.environ.update(access)
+    os.environ["OPENAI_BASE_URL"] = "https://api.openai.com/v1"
+    os.environ["DEMO_MODE"] = "0"
 
 
 @dataclass(frozen=True)
