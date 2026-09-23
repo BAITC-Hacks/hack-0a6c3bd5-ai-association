@@ -3,19 +3,16 @@
 import hashlib
 import json
 import secrets
-import sqlite3
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
-from fastapi.routing import APIRoute
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
 from starlette.formparsers import MultiPartException, MultiPartParser
 
-from app.api.chat import check_origin, get_store, session_token
+from app.api.guards import ConfirmationRoute, check_origin, get_store, session_token
 from app.chat_models import ChatResponse
 from app.commerce import canonical
 from app.db import product_from_row, require_warehouse
@@ -24,34 +21,9 @@ from app.upload_models import Extraction, UploadProposalRequest, UploadResponse
 
 MAX_FILE_BYTES = 10 * 1024 * 1024
 MAX_MULTIPART_BYTES = MAX_FILE_BYTES + 64 * 1024
-class UploadRoute(APIRoute):
-    """Неудачный новый запрос файла снимает разрешение на краткое «да»."""
-
-    def get_route_handler(self):
-        handler = super().get_route_handler()
-
-        async def guarded(request: Request):
-            async def clear_confirmation():
-                try:
-                    # Чужой Origin не вправе менять даже контекст подтверждения.
-                    check_origin(request)
-                    await run_in_threadpool(get_store(request).clear_presented, session_token(request))
-                except (ApiError, sqlite3.Error):
-                    pass  # Сохраняем исходную ошибку при отсутствии сессии/БД.
-
-            try:
-                response = await handler(request)
-            except (ApiError, RequestValidationError):
-                await clear_confirmation()
-                raise
-            if response.status_code >= 400:
-                await clear_confirmation()
-            return response
-
-        return guarded
 
 
-router = APIRouter(prefix="/api", route_class=UploadRoute, dependencies=[Depends(check_origin)])
+router = APIRouter(prefix="/api", route_class=ConfirmationRoute, dependencies=[Depends(check_origin)])
 
 
 def invalid_form():
