@@ -19,6 +19,7 @@ import "./styles.css";
 import "./catalog.css";
 import "./commerce.css";
 import "./checkout.css";
+import "./upload.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

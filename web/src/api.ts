@@ -78,6 +78,7 @@ async function requestJson<T>(
   body?: unknown,
 ): Promise<T> {
   const timeout = AbortSignal.timeout(method === "POST" ? 40000 : 10000);
+  const multipart = body instanceof FormData;
   let response: Response;
   try {
     response = await fetch(path, {
@@ -86,9 +87,13 @@ async function requestJson<T>(
       method,
       headers: {
         Accept: "application/json",
-        ...(method === "POST" ? { "Content-Type": "application/json" } : {}),
+        ...(method === "POST" && !multipart
+          ? { "Content-Type": "application/json" }
+          : {}),
       },
-      ...(method === "POST" ? { body: JSON.stringify(body) } : {}),
+      ...(method === "POST"
+        ? { body: multipart ? body : JSON.stringify(body) }
+        : {}),
     });
   } catch (error) {
     if (signal?.aborted) throw error;
@@ -205,6 +210,26 @@ export interface ConfirmResponse {
   proposal_id: string;
   status: "confirmed";
   cart: Cart;
+}
+
+export interface ExtractedUploadLine {
+  line_id: string;
+  query: string;
+  quantity: number | null;
+  unit: "шт" | "м" | null;
+}
+
+export interface UploadResponse {
+  upload_id: string;
+  warnings: string[];
+  lines: ExtractedUploadLine[];
+}
+
+export interface ReviewedUploadLine {
+  line_id: string;
+  query: string;
+  quantity: number;
+  unit: "шт" | "м";
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -328,6 +353,37 @@ function validChat(value: unknown): boolean {
   );
 }
 
+function validUpload(value: unknown): boolean {
+  if (
+    !record(value) ||
+    typeof value.upload_id !== "string" ||
+    !value.upload_id.trim() ||
+    !array(value.warnings, string) ||
+    !Array.isArray(value.lines) ||
+    value.lines.length < 1 ||
+    value.lines.length > 50
+  )
+    return false;
+  const ids = new Set<string>();
+  return value.lines.every((line: unknown) => {
+    if (
+      !record(line) ||
+      typeof line.line_id !== "string" ||
+      !line.line_id.trim() ||
+      line.line_id.length > 64 ||
+      ids.has(line.line_id) ||
+      typeof line.query !== "string" ||
+      !line.query.trim() ||
+      line.query.length > 2000 ||
+      !nullableInteger(line.quantity, 1) ||
+      !(line.unit === null || unit(line.unit))
+    )
+      return false;
+    ids.add(line.line_id);
+    return true;
+  });
+}
+
 function checked<T>(value: unknown, valid: (input: unknown) => boolean): T {
   if (!valid(value))
     throw new ApiError(
@@ -356,6 +412,41 @@ export async function sendChat(
   signal?: AbortSignal,
 ): Promise<ChatResponse> {
   return checked(await postJson("/api/chat", body, signal), validChat);
+}
+
+export async function uploadDocument(
+  file: File,
+  requestId: string,
+  warehouseId: string,
+  signal?: AbortSignal,
+): Promise<UploadResponse> {
+  const form = new FormData();
+  form.append("file", file, file.name);
+  form.append("request_id", requestId);
+  form.append("warehouse_id", warehouseId);
+  return checked(
+    await requestJson("/api/uploads", "POST", signal, form),
+    validUpload,
+  );
+}
+
+export async function proposeUpload(
+  uploadId: string,
+  body: {
+    request_id: string;
+    warehouse_id: string;
+    lines: ReviewedUploadLine[];
+  },
+  signal?: AbortSignal,
+): Promise<ChatResponse> {
+  return checked(
+    await postJson(
+      `/api/uploads/${encodeURIComponent(uploadId)}/proposal`,
+      body,
+      signal,
+    ),
+    validChat,
+  );
 }
 
 export async function confirmProposal(

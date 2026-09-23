@@ -7,9 +7,12 @@ import {
   getCart,
   getWarehouses,
   sendChat,
+  uploadDocument,
+  proposeUpload,
   type Cart,
   type ChatResponse,
   type Warehouse,
+  type ReviewedUploadLine,
 } from "./api";
 
 export interface ChatEntry {
@@ -19,8 +22,32 @@ export interface ChatEntry {
   response?: ChatResponse;
 }
 
+export interface DocumentLineDraft {
+  line_id: string;
+  query: string;
+  quantity: string;
+  unit: "" | "шт" | "м";
+  included: boolean;
+}
+
+export interface ReviewedDocument {
+  upload_id: string;
+  fileName: string;
+  warnings: string[];
+  lines: DocumentLineDraft[];
+}
+
 type Operation =
   | { kind: "chat"; requestId: string; message: string; warehouseId: string }
+  | { kind: "upload"; requestId: string; file: File; warehouseId: string }
+  | {
+      kind: "upload_proposal";
+      requestId: string;
+      uploadId: string;
+      fileName: string;
+      lines: ReviewedUploadLine[];
+      warehouseId: string;
+    }
   | {
       kind: "confirm";
       requestId: string;
@@ -47,15 +74,28 @@ export function useCommerce() {
   const [warehouseId, setWarehouse] = useState("");
   const [messages, setMessages] = useState<ChatEntry[]>([]);
   const [latest, setLatest] = useState<ChatResponse | null>(null);
+  const [document, setDocument] = useState<ReviewedDocument | null>(null);
+  const [documentResultId, setDocumentResultId] = useState<string | null>(null);
   const mounted = useRef(false);
   const lock = useRef(false);
   const readyRef = useRef(false);
   const warehouseRef = useRef("");
   const warehouseListRef = useRef<Warehouse[]>([]);
   const latestRef = useRef<ChatResponse | null>(null);
+  const documentRef = useRef<ReviewedDocument | null>(null);
   const pending = useRef<Operation | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
   const generation = useRef(0);
+
+  function updateDocument(value: ReviewedDocument | null) {
+    documentRef.current = value;
+    setDocument(value);
+  }
+
+  function clearDocument() {
+    updateDocument(null);
+    setDocumentResultId(null);
+  }
 
   function updateLatest(value: ChatResponse | null) {
     latestRef.current = value;
@@ -94,7 +134,10 @@ export function useCommerce() {
     const message =
       apiErrorMessage(caught) +
       (caught instanceof ApiError && caught.status === 409
-        ? " Отправьте запрос в чат заново."
+        ? pending.current?.kind === "upload" ||
+          pending.current?.kind === "upload_proposal"
+          ? " Вернитесь к спецификации и запустите проверку заново."
+          : " Отправьте запрос в чат заново."
         : "");
     setError(message);
     if (caught instanceof ApiError && caught.status === 401) {
@@ -102,6 +145,7 @@ export function useCommerce() {
       setReady(false);
       pending.current = null;
       dropProposal();
+      clearDocument();
       return;
     }
     if (
@@ -123,6 +167,7 @@ export function useCommerce() {
           ) {
             readyRef.current = false;
             setReady(false);
+            clearDocument();
           }
           if (isActive(token) && !signal.aborted)
             setError(
@@ -144,6 +189,7 @@ export function useCommerce() {
     setReady(false);
     setBooting(true);
     setError(null);
+    clearDocument();
     try {
       await createSession(controller.signal);
       const [currentCart, warehouseData] = await Promise.all([
@@ -204,18 +250,54 @@ export function useCommerce() {
     setBusy(true);
     setError(null);
     try {
-      if (operation.kind === "chat") {
-        const response = await sendChat(
-          {
-            message: operation.message,
-            request_id: operation.requestId,
-            warehouse_id: operation.warehouseId,
-          },
+      if (operation.kind === "upload") {
+        const response = await uploadDocument(
+          operation.file,
+          operation.requestId,
+          operation.warehouseId,
           controller.signal,
         );
         if (!isActive(token)) return;
+        updateDocument({
+          upload_id: response.upload_id,
+          fileName: operation.file.name,
+          warnings: response.warnings,
+          lines: response.lines.map((line) => ({
+            line_id: line.line_id,
+            query: line.query,
+            quantity: line.quantity === null ? "" : String(line.quantity),
+            unit: line.unit ?? "",
+            included: true,
+          })),
+        });
+      } else if (
+        operation.kind === "chat" ||
+        operation.kind === "upload_proposal"
+      ) {
+        const response =
+          operation.kind === "chat"
+            ? await sendChat(
+                {
+                  message: operation.message,
+                  request_id: operation.requestId,
+                  warehouse_id: operation.warehouseId,
+                },
+                controller.signal,
+              )
+            : await proposeUpload(
+                operation.uploadId,
+                {
+                  request_id: operation.requestId,
+                  warehouse_id: operation.warehouseId,
+                  lines: operation.lines,
+                },
+                controller.signal,
+              );
+        if (!isActive(token)) return;
         setCart(response.cart);
         updateLatest(response);
+        if (operation.kind === "upload_proposal")
+          setDocumentResultId(operation.requestId);
         const entry: ChatEntry = {
           id: `${operation.requestId}:assistant`,
           role: "assistant",
@@ -328,6 +410,7 @@ export function useCommerce() {
       warehouseId: warehouseRef.current,
     };
     dropProposal();
+    setDocumentResultId(null);
     pending.current = operation;
     setMessages((previous) => [
       ...previous,
@@ -380,7 +463,133 @@ export function useCommerce() {
     setWarehouse(id);
     pending.current = null;
     dropProposal();
+    setDocumentResultId(null);
     setError(null);
+  }
+
+  async function uploadFile(file: File) {
+    if (lock.current) return;
+    dropProposal();
+    pending.current = null;
+    clearDocument();
+    setError(null);
+    if (!readyRef.current) {
+      setError("Сессия ещё не готова. Повторите подключение.");
+      return;
+    }
+    if (!file.name.trim() || file.name.length > 255) {
+      setError("Имя файла должно содержать от 1 до 255 символов.");
+      return;
+    }
+    if (!/\.(xlsx|docx|pdf|jpe?g)$/i.test(file.name)) {
+      setError("Выберите файл XLSX, DOCX, PDF, JPG или JPEG.");
+      return;
+    }
+    if (file.size === 0 || file.size > 10 * 1024 * 1024) {
+      setError("Файл должен быть непустым и не превышать 10 MiB.");
+      return;
+    }
+    await execute({
+      kind: "upload",
+      requestId: crypto.randomUUID(),
+      file,
+      warehouseId: warehouseRef.current,
+    });
+  }
+
+  function updateDocumentLine(
+    id: string,
+    patch: Partial<Omit<DocumentLineDraft, "line_id">>,
+  ) {
+    if (lock.current) return;
+    const current = documentRef.current;
+    if (!current || !current.lines.some((line) => line.line_id === id)) return;
+    updateDocument({
+      ...current,
+      lines: current.lines.map((line) =>
+        line.line_id === id
+          ? { ...line, ...patch, line_id: line.line_id }
+          : line,
+      ),
+    });
+    dropProposal();
+    pending.current = null;
+    setDocumentResultId(null);
+    setError(null);
+  }
+
+  function resetDocument() {
+    if (lock.current) return;
+    clearDocument();
+    dropProposal();
+    pending.current = null;
+    setError(null);
+  }
+
+  async function proposeDocument() {
+    if (lock.current) return;
+    dropProposal();
+    pending.current = null;
+    setDocumentResultId(null);
+    setError(null);
+    if (!readyRef.current) {
+      setError("Сессия ещё не готова. Повторите подключение.");
+      return;
+    }
+    const current = documentRef.current;
+    if (!current) {
+      setError("Сначала загрузите документ и проверьте строки.");
+      return;
+    }
+    const included = current.lines.filter((line) => line.included);
+    if (included.length < 1 || included.length > 50) {
+      setError("Оставьте в спецификации от 1 до 50 строк.");
+      return;
+    }
+    const lines: ReviewedUploadLine[] = [];
+    for (const line of included) {
+      const query = line.query.trim();
+      const quantity = Number(line.quantity.trim());
+      if (!query || query.length > 2000) {
+        setError(
+          `Строка ${line.line_id}: укажите название или артикул длиной до 2000 символов.`,
+        );
+        return;
+      }
+      if (
+        !/^\d+$/.test(line.quantity.trim()) ||
+        !Number.isSafeInteger(quantity) ||
+        quantity <= 0
+      ) {
+        setError(
+          `Строка ${line.line_id}: укажите положительное целое количество.`,
+        );
+        return;
+      }
+      if (line.unit !== "шт" && line.unit !== "м") {
+        setError(`Строка ${line.line_id}: выберите единицу «шт» или «м».`);
+        return;
+      }
+      lines.push({ line_id: line.line_id, query, quantity, unit: line.unit });
+    }
+    const operation: Operation = {
+      kind: "upload_proposal",
+      requestId: crypto.randomUUID(),
+      uploadId: current.upload_id,
+      fileName: current.fileName,
+      lines,
+      warehouseId: warehouseRef.current,
+    };
+    pending.current = operation;
+    setMessages((previous) => [
+      ...previous,
+      {
+        id: `${operation.requestId}:user`,
+        role: "user",
+        text: `Проверить спецификацию «${current.fileName}» (${lines.length} строк)`,
+      },
+    ]);
+    await execute(operation);
   }
 
   async function refresh() {
@@ -433,9 +642,20 @@ export function useCommerce() {
     setWarehouseId,
     messages,
     latest,
+    document,
+    documentResultId,
+    uploadFile,
+    updateDocumentLine,
+    proposeDocument,
+    resetDocument,
     send,
     confirm,
     retry,
+    retryLabel: !ready
+      ? "Подключиться"
+      : pending.current
+        ? "Повторить"
+        : "Обновить корзину",
     refresh,
     dismissError: () => setError(null),
   };

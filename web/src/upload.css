@@ -1,0 +1,1169 @@
+.upload-panel {
+  max-width: 1500px;
+  margin: 0 auto;
+  min-width: 0;
+}
+.upload-workflow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  padding: 0 0 25px;
+  margin: 0 0 25px;
+  border-bottom: 1px solid #e2e8f1;
+  gap: 22px;
+}
+.upload-workflow li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.upload-workflow li > span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border: 1px solid #dde5f2;
+  border-radius: 50%;
+  color: #9aa8bd;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  background: #fafbfd;
+}
+.upload-workflow strong {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #94a0b4;
+}
+.upload-workflow small {
+  font-size: 10px;
+  color: #9ba8bd;
+  margin-top: 3px;
+}
+.upload-workflow .active > span {
+  border-color: #bfd0f7;
+  background: #edf3ff;
+  color: var(--blue);
+}
+.upload-workflow .active strong {
+  color: #4d6d9a;
+}
+.upload-workflow .complete > span {
+  color: #4a8d79;
+  background: #edf7f3;
+  border-color: #d4e9df;
+}
+.upload-workflow .complete strong {
+  color: #667f8f;
+}
+.upload-start-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 34px;
+  align-items: start;
+}
+.upload-start-main {
+  min-width: 0;
+}
+.upload-dropzone {
+  background: #fff;
+  border: 1px dashed #bfcde3;
+  border-radius: 12px;
+  text-align: center;
+  padding: 39px 30px 30px;
+  position: relative;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.upload-dropzone.dragging {
+  background: #f0f5ff;
+  border-color: #648eeb;
+  box-shadow: inset 0 0 0 3px #e1eaff;
+}
+.upload-dropzone.disabled {
+  border-color: #dce3ec;
+}
+.upload-sheet-symbol {
+  height: 87px;
+  width: 78px;
+  position: relative;
+  margin: 0 auto 27px;
+  color: #7c9bd0;
+}
+.upload-sheet-symbol > span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #dce5f3;
+  border-radius: 7px;
+  background: #f8faff;
+  transform: rotate(6deg);
+  z-index: 0;
+}
+.upload-sheet-symbol > span:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 14px;
+  background: #fff;
+  transform: rotate(-6deg);
+  z-index: 2;
+}
+.upload-sheet-symbol > span:nth-child(2) {
+  transform: rotate(0deg) translate(2px, 3px);
+  z-index: 1;
+}
+.upload-sheet-symbol i {
+  width: 33px;
+  height: 5px;
+  border-top: 1px solid #cad7ee;
+  border-bottom: 1px solid #cad7ee;
+}
+.upload-eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.7px;
+  color: #8194b0;
+  line-height: 1.8;
+}
+.upload-dropzone h2 {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -1.2px;
+  color: #344e74;
+  margin-top: 14px;
+}
+.upload-dropzone h2 > span {
+  color: #8497b5;
+  font-weight: 450;
+}
+.upload-dropzone > p:not(.upload-drop-limit) {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #7b8da8;
+  max-width: 390px;
+  margin: 18px auto 24px;
+}
+.upload-choose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 18px;
+  font-size: 12px;
+}
+.upload-drop-hint {
+  display: block;
+  font-size: 10px;
+  color: #97a7c0;
+  margin-top: 12px;
+}
+.upload-formats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 27px;
+}
+.upload-formats > span {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  color: #8a9dbc;
+  border: 1px solid #e3eaf5;
+  background: #f9fbff;
+  border-radius: 4px;
+  padding: 4px 7px;
+}
+.upload-drop-limit {
+  font-size: 10px;
+  color: #92a3bd;
+  margin-top: 11px;
+  line-height: 1.7;
+}
+.upload-examples {
+  margin-top: 22px;
+  background: #fff;
+  border: 1px solid #e5eaf3;
+  border-radius: 9px;
+  padding: 19px;
+}
+.upload-examples-heading {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  color: #8aa1c4;
+}
+.upload-examples-heading h3 {
+  font-size: 12px;
+  color: #67809f;
+  font-weight: 600;
+}
+.upload-examples-heading p {
+  font-size: 10px;
+  color: #92a3b9;
+  line-height: 1.7;
+  margin-top: 5px;
+}
+.upload-example-links {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 17px;
+}
+.upload-example-links > a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 8px;
+  border: 1px solid #e5ebf5;
+  border-radius: 6px;
+  min-width: 0;
+  color: #849cbe;
+  background: #fbfcff;
+}
+.upload-example-links > a:hover {
+  border-color: #b8cbf1;
+  background: #f2f6ff;
+  color: #527fd0;
+}
+.upload-example-links strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+  display: block;
+}
+.upload-example-links small {
+  font-size: 8px;
+  margin-top: 4px;
+  line-height: 1.5;
+  color: #94a4bc;
+}
+.upload-example-links > a > svg:last-child {
+  margin-left: auto;
+}
+.upload-example-links > a > svg:first-child {
+  width: 15px;
+}
+.upload-instructions {
+  padding: 24px 0 0;
+  min-width: 0;
+}
+.upload-instructions > h3 {
+  font-size: 23px;
+  line-height: 1.4;
+  letter-spacing: -0.6px;
+  font-weight: 500;
+  color: #526f96;
+  margin: 13px 0 25px;
+}
+.upload-instruction-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 15px 0;
+  border-top: 1px solid #e2e8f1;
+}
+.upload-instruction-row > span {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  color: #8ca4c5;
+  padding-top: 3px;
+}
+.upload-instruction-row strong {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b82a2;
+  line-height: 1.6;
+}
+.upload-instruction-row p {
+  font-size: 11px;
+  line-height: 1.85;
+  color: #8b9db6;
+  margin-top: 6px;
+}
+.upload-photo-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 13px 0 21px;
+  padding: 13px;
+  background: #edf2fa;
+  border-radius: 7px;
+  color: #7e98bf;
+}
+.upload-photo-note > p {
+  font-size: 10px;
+  line-height: 1.9;
+  color: #7c91b0;
+}
+.upload-safe-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 1.9;
+  color: #8d9eb6;
+}
+.upload-safe-note > svg {
+  margin-top: 2px;
+  color: #829fc1;
+}
+.upload-chat-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #6f8ebd;
+  font-size: 11px;
+  text-align: left;
+  line-height: 1.7;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f1;
+  width: 100%;
+}
+.upload-chat-link > svg:last-child {
+  margin-left: auto;
+}
+.upload-chat-link:hover {
+  color: #315cea;
+}
+.upload-local-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 15px;
+  background: #fff7ec;
+  border: 1px solid #f0e1cc;
+  border-radius: 8px;
+  color: #956c3a;
+  margin-bottom: 17px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.upload-local-error > svg {
+  margin-top: 2px;
+}
+.upload-local-error p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.upload-local-error > button {
+  margin-left: auto;
+  color: #a0886c;
+  padding: 3px;
+  display: flex;
+}
+.upload-busy {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #6788bb;
+  margin-bottom: 17px;
+  padding: 10px 13px;
+  background: #edf3ff;
+  border: 1px solid #dae5fb;
+  border-radius: 7px;
+}
+.upload-busy > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.upload-busy > svg {
+  margin-top: 2px;
+  animation: upload-spin 0.9s linear infinite;
+}
+@keyframes upload-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.upload-review-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 24px;
+  align-items: start;
+}
+.upload-review-main {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e0e7f2;
+  border-radius: 11px;
+  overflow: hidden;
+}
+.upload-document-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 23px 20px;
+  border-bottom: 1px solid #e9edf4;
+}
+.upload-document-heading > div {
+  min-width: 0;
+}
+.upload-document-icon {
+  width: 41px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid #e0e8f6;
+  border-radius: 8px;
+  background: #f6f9ff;
+  color: #809dcb;
+}
+.upload-document-heading h2 {
+  font-size: 17px;
+  line-height: 1.6;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #536f96;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+}
+.upload-document-heading p {
+  font-size: 10px;
+  color: #8a9db8;
+  line-height: 1.8;
+  margin-top: 3px;
+}
+.upload-document-heading > button {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 10px;
+  padding: 9px 10px;
+  flex-shrink: 0;
+}
+.upload-warnings {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 18px 20px 0;
+  padding: 13px 14px;
+  background: #fff9ef;
+  border: 1px solid #f2e6d1;
+  border-radius: 7px;
+  color: #a1814b;
+}
+.upload-warnings > svg {
+  margin-top: 2px;
+}
+.upload-warnings h3 {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: #987743;
+}
+.upload-warnings ul {
+  padding: 0 0 0 16px;
+  margin: 6px 0 0;
+}
+.upload-warnings li {
+  font-size: 11px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.upload-review-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 19px 20px 15px;
+}
+.upload-review-intro > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: #708bab;
+}
+.upload-review-intro > p {
+  font-size: 10px;
+  color: #91a2ba;
+  line-height: 1.7;
+  text-align: right;
+}
+.upload-column-labels,
+.upload-line {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 96px 93px;
+  column-gap: 13px;
+}
+.upload-column-labels {
+  padding: 10px 20px;
+  background: #f7f9fd;
+  border-top: 1px solid #e8edf6;
+  border-bottom: 1px solid #e8edf6;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  color: #8a9ebc;
+  line-height: 1.8;
+}
+.upload-line {
+  padding: 17px 20px;
+  border-bottom: 1px solid #edf0f6;
+  align-items: start;
+  transition: background-color 0.16s;
+}
+.upload-line:last-child {
+  border-bottom: 0;
+}
+.upload-line.excluded {
+  background: #fafbfd;
+}
+.upload-line-select {
+  padding-top: 10px;
+  min-width: 0;
+}
+.upload-line-select label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.upload-line-select input {
+  accent-color: var(--blue);
+  height: 15px;
+  width: 15px;
+  margin: 0;
+  cursor: pointer;
+}
+.upload-line-select label > span {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  color: #869cbb;
+}
+.upload-line-select small {
+  font-size: 8px;
+  color: #a0acc0;
+  margin-top: 8px;
+}
+.upload-line.excluded .upload-line-select label > span {
+  color: #a7b4c8;
+}
+.upload-line textarea,
+.upload-line input:not([type="checkbox"]),
+.upload-line select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dfe7f3;
+  border-radius: 6px;
+  background: #fff;
+  color: #5c759a;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 9px 10px;
+  outline: none;
+}
+.upload-line textarea {
+  resize: vertical;
+  min-height: 42px;
+  max-height: 180px;
+  overflow-wrap: anywhere;
+}
+.upload-line select {
+  height: 41px;
+  padding-right: 4px;
+}
+.upload-line input:not([type="checkbox"]) {
+  height: 41px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+}
+.upload-line textarea:disabled,
+.upload-line input:disabled:not([type="checkbox"]),
+.upload-line select:disabled {
+  color: #a3aec1;
+  background: #f7f9fc;
+  cursor: not-allowed;
+}
+.upload-line [aria-invalid="true"] {
+  border-color: #ddb984;
+  background: #fffcf7;
+}
+.upload-line textarea:focus,
+.upload-line input:not([type="checkbox"]):focus,
+.upload-line select:focus {
+  border-color: #92b0e8;
+  box-shadow: 0 0 0 3px #edf3ff;
+}
+.upload-field-error {
+  font-size: 9px;
+  line-height: 1.65;
+  color: #a2743b;
+  padding: 6px 1px 0;
+}
+.upload-mobile-label {
+  display: none;
+}
+.upload-no-lines {
+  padding: 35px 22px;
+  text-align: center;
+  color: #869cbd;
+}
+.upload-no-lines > svg {
+  margin-bottom: 14px;
+}
+.upload-no-lines h3 {
+  font-size: 17px;
+  color: #6983a7;
+  margin-bottom: 10px;
+}
+.upload-no-lines p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #8b9fb9;
+  margin-bottom: 20px;
+}
+.upload-review-summary {
+  position: sticky;
+  top: 20px;
+  border: 1px solid #dfe7f5;
+  border-radius: 10px;
+  padding: 22px;
+  background: #fff;
+  min-width: 0;
+}
+.upload-summary-heading h2 {
+  font-size: 21px;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+  color: #48658f;
+  font-weight: 600;
+  margin-top: 7px;
+}
+.upload-summary-heading p {
+  font-size: 12px;
+  line-height: 1.85;
+  color: #8a9db8;
+  margin-top: 12px;
+}
+.upload-review-warehouse {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 23px;
+  color: #7998c3;
+}
+.upload-review-warehouse small {
+  font-size: 10px;
+  color: #9aabc2;
+}
+.upload-review-warehouse strong {
+  display: block;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #6a86aa;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.upload-line-counts {
+  display: flex;
+  justify-content: space-between;
+  gap: 13px;
+  padding: 20px 0;
+  margin: 19px 0;
+  border-top: 1px solid #e9edf5;
+  border-bottom: 1px solid #e9edf5;
+}
+.upload-line-counts dt {
+  font-size: 10px;
+  color: #93a4bd;
+  line-height: 1.7;
+}
+.upload-line-counts dd {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 25px;
+  font-weight: 400;
+  color: #5f7ea9;
+  letter-spacing: -1px;
+  margin: 7px 0 0;
+}
+.upload-line-counts dd > span {
+  font:
+    10px "Manrope",
+    sans-serif;
+  letter-spacing: 0;
+  color: #a0aec2;
+  margin-left: 7px;
+}
+.upload-line-counts > div:last-child dd {
+  color: #95a7c3;
+}
+.upload-validation-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: #a78856;
+  padding: 0 0 16px;
+}
+.upload-validation-summary > p {
+  font-size: 11px;
+  line-height: 1.8;
+}
+.upload-validation-summary > svg {
+  margin-top: 2px;
+}
+.upload-propose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  font-size: 11px;
+  padding: 13px 8px;
+}
+.upload-propose > .lucide-loader-circle {
+  animation: upload-spin 0.9s linear infinite;
+}
+.upload-final-quantity {
+  font-size: 10px;
+  line-height: 1.85;
+  color: #8e9fb8;
+  margin: 16px 0;
+}
+.upload-review-summary > .upload-safe-note {
+  padding-top: 15px;
+  border-top: 1px solid #eaf0f7;
+}
+.upload-panel button:focus-visible,
+.upload-panel a:focus-visible,
+.upload-line input[type="checkbox"]:focus-visible {
+  outline: 3px solid #a3bcf5;
+  outline-offset: 4px;
+}
+@media (min-width: 1600px) {
+  .upload-start-layout {
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 44px;
+  }
+  .upload-dropzone {
+    padding-top: 48px;
+    padding-bottom: 39px;
+  }
+  .upload-dropzone h2 {
+    font-size: 39px;
+  }
+  .upload-review-layout {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 27px;
+  }
+  .upload-line {
+    grid-template-columns: 65px minmax(0, 1fr) 110px 105px;
+  }
+  .upload-column-labels {
+    grid-template-columns: 65px minmax(0, 1fr) 110px 105px;
+  }
+  .upload-line textarea {
+    font-size: 13px;
+  }
+}
+@media (max-width: 1150px) {
+  .upload-start-layout {
+    grid-template-columns: minmax(0, 1fr) 245px;
+    gap: 22px;
+  }
+  .upload-review-layout {
+    grid-template-columns: minmax(0, 1fr) 248px;
+    gap: 17px;
+  }
+  .upload-dropzone {
+    padding: 30px 20px 26px;
+  }
+  .upload-dropzone h2 {
+    font-size: 30px;
+  }
+  .upload-example-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .upload-example-links > a {
+    padding: 11px;
+  }
+  .upload-instructions > h3 {
+    font-size: 20px;
+  }
+  .upload-document-heading {
+    padding: 18px 15px;
+    flex-wrap: wrap;
+  }
+  .upload-document-heading > div {
+    flex: 1;
+  }
+  .upload-document-heading > button {
+    margin-left: 53px;
+  }
+  .upload-review-intro {
+    padding: 16px 15px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .upload-review-intro > p {
+    text-align: left;
+  }
+  .upload-column-labels,
+  .upload-line {
+    grid-template-columns: 43px minmax(0, 1fr) 72px 80px;
+    gap: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .upload-column-labels {
+    font-size: 8px;
+  }
+  .upload-line-select label {
+    gap: 5px;
+  }
+  .upload-line textarea,
+  .upload-line input:not([type="checkbox"]),
+  .upload-line select {
+    padding: 8px;
+    font-size: 11px;
+  }
+  .upload-review-summary {
+    padding: 18px;
+  }
+  .upload-summary-heading h2 {
+    font-size: 19px;
+  }
+  .upload-propose {
+    font-size: 10px;
+    gap: 5px;
+  }
+  .upload-warnings {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}
+@media (max-width: 850px) {
+  .upload-start-layout,
+  .upload-review-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+  .upload-instructions {
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 18px;
+  }
+  .upload-instructions > .upload-eyebrow,
+  .upload-instructions > h3 {
+    grid-column: 1/-1;
+  }
+  .upload-instructions > h3 {
+    font-size: 23px;
+    margin-bottom: 17px;
+  }
+  .upload-instruction-row {
+    gap: 8px;
+  }
+  .upload-photo-note {
+    grid-column: 1/-1;
+    margin: 12px 0 17px;
+  }
+  .upload-instructions > .upload-safe-note,
+  .upload-instructions > .upload-chat-link {
+    grid-column: 1/-1;
+  }
+  .upload-instructions > .upload-chat-link {
+    margin-top: 15px;
+  }
+  .upload-review-summary {
+    position: static;
+    padding: 23px;
+  }
+  .upload-line-counts {
+    max-width: 360px;
+  }
+  .upload-review-summary > .upload-propose {
+    max-width: 350px;
+    font-size: 12px;
+  }
+  .upload-review-summary > .upload-chat-link {
+    max-width: 350px;
+  }
+  .upload-workflow {
+    gap: 11px;
+  }
+  .upload-workflow strong {
+    font-size: 11px;
+  }
+  .upload-workflow small {
+    font-size: 9px;
+  }
+  .upload-document-heading > button {
+    margin-left: auto;
+  }
+  .upload-column-labels,
+  .upload-line {
+    grid-template-columns: 55px minmax(0, 1fr) 100px 100px;
+    gap: 12px;
+  }
+  .upload-line textarea,
+  .upload-line input:not([type="checkbox"]),
+  .upload-line select {
+    font-size: 12px;
+  }
+}
+@media (max-width: 560px) {
+  .upload-workflow {
+    padding-bottom: 18px;
+    margin-bottom: 19px;
+    gap: 10px;
+  }
+  .upload-workflow li {
+    align-items: flex-start;
+    gap: 6px;
+    flex-direction: column;
+  }
+  .upload-workflow li > span {
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
+  .upload-workflow strong {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .upload-workflow small {
+    display: none;
+  }
+  .upload-dropzone {
+    padding: 29px 19px 25px;
+    border-radius: 9px;
+  }
+  .upload-sheet-symbol {
+    width: 65px;
+    height: 75px;
+    margin-bottom: 24px;
+  }
+  .upload-dropzone > .upload-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.5px;
+  }
+  .upload-dropzone h2 {
+    font-size: 29px;
+  }
+  .upload-dropzone > p:not(.upload-drop-limit) {
+    font-size: 12px;
+    margin-top: 16px;
+    line-height: 1.85;
+  }
+  .upload-choose {
+    font-size: 12px;
+    padding: 13px 17px;
+  }
+  .upload-drop-limit {
+    font-size: 9px;
+  }
+  .upload-formats {
+    margin-top: 22px;
+  }
+  .upload-examples {
+    padding: 17px 14px;
+  }
+  .upload-examples-heading h3 {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .upload-examples-heading p {
+    font-size: 10px;
+  }
+  .upload-example-links > a {
+    padding: 11px 9px;
+  }
+  .upload-example-links small {
+    font-size: 9px;
+  }
+  .upload-instructions {
+    display: block;
+    padding: 0 5px;
+  }
+  .upload-instructions > h3 {
+    margin-top: 10px;
+    font-size: 23px;
+  }
+  .upload-instruction-row {
+    padding: 15px 0;
+    gap: 13px;
+  }
+  .upload-instruction-row strong {
+    font-size: 13px;
+  }
+  .upload-instruction-row p {
+    font-size: 12px;
+  }
+  .upload-photo-note > p,
+  .upload-safe-note {
+    font-size: 11px;
+  }
+  .upload-chat-link {
+    font-size: 12px;
+  }
+  .upload-review-main {
+    border-radius: 9px;
+  }
+  .upload-document-heading {
+    padding: 17px 14px;
+    gap: 9px;
+  }
+  .upload-document-icon {
+    width: 34px;
+    height: 38px;
+  }
+  .upload-document-icon > svg {
+    width: 21px;
+  }
+  .upload-document-heading h2 {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .upload-document-heading > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .upload-document-heading > button {
+    margin: 4px 0 0 43px;
+    font-size: 10px;
+  }
+  .upload-review-intro {
+    padding: 16px 14px;
+  }
+  .upload-review-intro > span {
+    font-size: 11px;
+  }
+  .upload-review-intro > p {
+    font-size: 10px;
+  }
+  .upload-column-labels {
+    display: none;
+  }
+  .upload-line {
+    grid-template-columns: 35px minmax(0, 1fr) minmax(0, 1fr);
+    padding: 16px 14px;
+    gap: 12px 10px;
+    align-items: start;
+  }
+  .upload-line-select {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    padding-top: 22px;
+  }
+  .upload-line-select label {
+    gap: 5px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .upload-line-select label > span {
+    padding-left: 1px;
+    margin-top: 5px;
+    font-size: 10px;
+  }
+  .upload-line-select small {
+    display: none;
+  }
+  .upload-query-field {
+    grid-column: 2 / -1;
+  }
+  .upload-quantity-field {
+    grid-column: 2;
+  }
+  .upload-unit-field {
+    grid-column: 3;
+  }
+  .upload-mobile-label {
+    display: block;
+    font-size: 10px;
+    line-height: 1.8;
+    color: #8da0bb;
+    margin-bottom: 5px;
+  }
+  .upload-line textarea,
+  .upload-line input:not([type="checkbox"]),
+  .upload-line select {
+    font-size: 16px;
+    padding: 9px 10px;
+    border-radius: 6px;
+  }
+  .upload-line textarea {
+    min-height: 70px;
+  }
+  .upload-line input:not([type="checkbox"]) {
+    font-size: 16px;
+    height: 44px;
+  }
+  .upload-line select {
+    height: 44px;
+  }
+  .upload-field-error {
+    font-size: 10px;
+  }
+  .upload-warnings {
+    margin: 15px 14px 0;
+    padding: 12px 11px;
+    gap: 8px;
+  }
+  .upload-warnings li {
+    font-size: 11px;
+  }
+  .upload-review-summary {
+    padding: 22px 19px;
+    border-radius: 9px;
+  }
+  .upload-summary-heading h2 {
+    font-size: 23px;
+  }
+  .upload-summary-heading p {
+    font-size: 13px;
+  }
+  .upload-line-counts {
+    margin-top: 19px;
+  }
+  .upload-review-summary > .upload-propose {
+    max-width: none;
+    font-size: 13px;
+    padding: 14px 12px;
+  }
+  .upload-final-quantity {
+    font-size: 11px;
+    line-height: 1.9;
+  }
+  .upload-review-summary > .upload-safe-note {
+    font-size: 11px;
+  }
+  .upload-validation-summary > p {
+    font-size: 12px;
+  }
+  .upload-local-error {
+    font-size: 11px;
+    padding: 12px;
+    gap: 8px;
+  }
+  .upload-busy {
+    font-size: 11px;
+  }
+  .upload-panel .upload-choose:disabled,
+  .upload-panel .upload-propose:disabled {
+    opacity: 0.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .upload-panel * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

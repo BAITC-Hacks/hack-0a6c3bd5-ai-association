@@ -6,6 +6,7 @@ import {
   ChevronRight,
   CircleHelp,
   FileCheck2,
+  FileUp,
   LayoutGrid,
   LoaderCircle,
   MapPin,
@@ -21,16 +22,16 @@ import {
 import CatalogPanel from "./CatalogPanel";
 import ChatPanel from "./ChatPanel";
 import CartPanel from "./CartPanel";
+import UploadPanel from "./UploadPanel";
 import { useCommerce } from "./useCommerce";
 
 const money = (value: number) =>
   `${new Intl.NumberFormat("ru-RU").format(value)} ₸`;
-type Section = "workspace" | "catalog" | "cart";
+type Section = "workspace" | "catalog" | "cart" | "upload";
 function readSection(): Section {
   if (location.pathname === "/cart") return "cart";
-  return new URLSearchParams(location.search).get("view") === "catalog"
-    ? "catalog"
-    : "workspace";
+  const view = new URLSearchParams(location.search).get("view");
+  return view === "catalog" || view === "upload" ? view : "workspace";
 }
 function BrandMark() {
   return (
@@ -125,7 +126,7 @@ export default function App() {
     history.pushState(
       {},
       "",
-      next === "cart" ? "/cart" : next === "catalog" ? "/?view=catalog" : "/",
+      next === "cart" ? "/cart" : next === "workspace" ? "/" : `/?view=${next}`,
     );
     if (next === "cart" && commerce.ready && !commerce.busy)
       void commerce.refresh();
@@ -161,6 +162,12 @@ export default function App() {
     if (confirmationId && proposal?.id !== confirmationId)
       setConfirmationId(null);
   }, [proposal?.id, confirmationId]);
+  useEffect(() => {
+    if (!commerce.documentResultId) return;
+    setSection("workspace");
+    history.pushState({}, "", "/");
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [commerce.documentResultId]);
 
   async function sendFromCart(message: string) {
     if (
@@ -240,6 +247,15 @@ export default function App() {
             <span>Каталог товаров</span>
           </button>
           <button
+            className={`nav-item ${section === "upload" ? "active" : ""}`}
+            aria-label="Спецификация из файла"
+            aria-current={section === "upload" ? "page" : undefined}
+            onClick={() => navigate("upload")}
+          >
+            <FileUp size={18} />
+            <span>Спецификация</span>
+          </button>
+          <button
             className={`nav-item ${section === "cart" ? "active" : ""}`}
             aria-label="Моя корзина"
             aria-current={section === "cart" ? "page" : undefined}
@@ -306,7 +322,9 @@ export default function App() {
                 ? "Подбор"
                 : section === "catalog"
                   ? "Каталог"
-                  : "Корзина"}
+                  : section === "upload"
+                    ? "Спецификация"
+                    : "Корзина"}
             </strong>
           </div>
           <div className="topbar-actions">
@@ -347,7 +365,9 @@ export default function App() {
                   ? "ВАША ЗАДАЧА. НАШЕ ВНИМАНИЕ К ДЕТАЛЯМ."
                   : section === "catalog"
                     ? "НАЙТИ. СРАВНИТЬ. ПРОВЕРИТЬ."
-                    : "ТОЛЬКО ТО, ЧТО ВЫ ПОДТВЕРДИЛИ."}
+                    : section === "upload"
+                      ? "ИЗ ДОКУМЕНТА — В ПРОВЕРЕННЫЙ КОМПЛЕКТ."
+                      : "ТОЛЬКО ТО, ЧТО ВЫ ПОДТВЕРДИЛИ."}
               </div>
               <h1>
                 {section === "workspace" ? (
@@ -357,6 +377,10 @@ export default function App() {
                 ) : section === "catalog" ? (
                   <>
                     Каталог<span> с проверяемыми данными.</span>
+                  </>
+                ) : section === "upload" ? (
+                  <>
+                    Ваша спецификация.<span> Каждая строка на виду.</span>
                   </>
                 ) : (
                   <>
@@ -369,25 +393,41 @@ export default function App() {
                   ? "От списка требований — к комплекту, в котором всё сходится."
                   : section === "catalog"
                     ? "Товары из локального снимка. Поиск, характеристики и остаток выбранного склада."
-                    : "Подтверждённые позиции вашей сессии. Заказ и резервирование в ekt.kz не выполняются."}
+                    : section === "upload"
+                      ? "Загрузите файл, уточните позиции и проверьте их по каталогу выбранного склада."
+                      : "Подтверждённые позиции вашей сессии. Заказ и резервирование в ekt.kz не выполняются."}
               </p>
             </div>
-            <button
-              className="new-selection"
-              aria-label={
-                section === "cart" ? "Вернуться к подбору" : "Перейти в корзину"
-              }
-              onClick={() =>
-                navigate(section === "cart" ? "workspace" : "cart")
-              }
-            >
-              {section === "cart" ? (
-                <ArrowLeft size={16} />
-              ) : (
-                <ShoppingBag size={16} />
+            <div className="heading-actions">
+              {section === "workspace" && (
+                <button
+                  className="new-selection"
+                  aria-label="Загрузить спецификацию"
+                  onClick={() => navigate("upload")}
+                >
+                  <FileUp size={16} />
+                  <span>Из файла</span>
+                </button>
               )}
-              <span>{section === "cart" ? "К подбору" : "Корзина"}</span>
-            </button>
+              <button
+                className="new-selection"
+                aria-label={
+                  section === "cart"
+                    ? "Вернуться к подбору"
+                    : "Перейти в корзину"
+                }
+                onClick={() =>
+                  navigate(section === "cart" ? "workspace" : "cart")
+                }
+              >
+                {section === "cart" ? (
+                  <ArrowLeft size={16} />
+                ) : (
+                  <ShoppingBag size={16} />
+                )}
+                <span>{section === "cart" ? "К подбору" : "Корзина"}</span>
+              </button>
+            </div>
           </div>
           {commerce.error && (
             <div className="commerce-error" role="alert">
@@ -401,7 +441,7 @@ export default function App() {
                 disabled={commerce.busy}
               >
                 <RefreshCw size={15} />
-                Повторить
+                {commerce.retryLabel}
               </button>
               <button
                 className="icon-button"
@@ -419,21 +459,54 @@ export default function App() {
             </div>
           )}
           {section === "workspace" && (
-            <ChatPanel
-              messages={commerce.messages}
-              latest={commerce.latest}
-              cart={commerce.cart}
-              warehouseId={commerce.warehouseId}
-              warehouses={commerce.warehouses}
-              busy={commerce.busy}
+            <>
+              {commerce.document && (
+                <div className="document-return">
+                  <FileCheck2 size={20} />
+                  <div>
+                    <strong>{commerce.document.fileName}</strong>
+                    <span>
+                      Строки спецификации можно уточнить и проверить повторно.
+                    </span>
+                  </div>
+                  <button
+                    className="secondary-button"
+                    onClick={() => navigate("upload")}
+                  >
+                    Исправить строки
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
+              )}
+              <ChatPanel
+                messages={commerce.messages}
+                latest={commerce.latest}
+                cart={commerce.cart}
+                warehouseId={commerce.warehouseId}
+                warehouses={commerce.warehouses}
+                busy={commerce.busy}
+                ready={commerce.ready}
+                onSend={commerce.send}
+                onConfirm={() => {
+                  setNow(Date.now());
+                  if (proposal?.status === "pending")
+                    setConfirmationId(proposal.id);
+                }}
+                onOpenCart={() => navigate("cart")}
+              />
+            </>
+          )}
+          {section === "upload" && (
+            <UploadPanel
+              document={commerce.document}
               ready={commerce.ready}
-              onSend={commerce.send}
-              onConfirm={() => {
-                setNow(Date.now());
-                if (proposal?.status === "pending")
-                  setConfirmationId(proposal.id);
-              }}
-              onOpenCart={() => navigate("cart")}
+              busy={commerce.busy}
+              warehouseName={warehouse?.city || warehouse?.name || ""}
+              onUpload={commerce.uploadFile}
+              onChangeLine={commerce.updateDocumentLine}
+              onPropose={commerce.proposeDocument}
+              onReset={commerce.resetDocument}
+              onOpenChat={() => navigate("workspace")}
             />
           )}
           {section === "catalog" && (
@@ -570,10 +643,11 @@ export default function App() {
             <div>
               <span>1</span>
               <section>
-                <h3>Укажите артикул или характеристики</h3>
+                <h3>Опишите задачу или загрузите спецификацию</h3>
                 <p>
                   Контур проверит данные загруженного каталога и выбранного
-                  склада.
+                  склада. Строки файла сначала покажем для проверки и
+                  исправления.
                 </p>
               </section>
             </div>
@@ -602,7 +676,8 @@ export default function App() {
             Цены и остатки относятся к сохранённому снимку. Учебные позиции явно
             обозначены; реальная оплата и резервирование не выполняются. Корзина
             хранится на сервере, история диалога в этой версии — только в
-            открытой вкладке.
+            открытой вкладке. Редактируемые строки файла также сохраняются
+            только до перезагрузки страницы.
           </p>
           <button className="primary-button" onClick={() => setHelp(false)}>
             Понятно
