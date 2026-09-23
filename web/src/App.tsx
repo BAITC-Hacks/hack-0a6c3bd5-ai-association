@@ -19,14 +19,16 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import clsx from "clsx";
 import CatalogPanel from "./CatalogPanel";
 import ChatPanel from "./ChatPanel";
 import CartPanel from "./CartPanel";
 import UploadPanel from "./UploadPanel";
 import { useCommerce } from "./useCommerce";
+import { isRemoval, usePendingProposal } from "./proposal";
+import { DecisionBar, StepRail, useCompactScreen } from "./path";
+import { money, plural } from "./format";
 
-const money = (value: number) =>
-  `${new Intl.NumberFormat("ru-RU").format(value)} ₸`;
 type Section = "workspace" | "catalog" | "cart" | "upload";
 function readSection(): Section {
   if (location.pathname === "/cart") return "cart";
@@ -100,27 +102,25 @@ export default function App() {
   const [catalogFocus, setCatalogFocus] = useState(0);
   const [help, setHelp] = useState(false);
   const [confirmationId, setConfirmationId] = useState<string | null>(null);
-  const [now, setNow] = useState(Date.now());
-  const proposal = commerce.latest?.proposal;
+  const [barHidden, setBarHidden] = useState<string | null>(null);
+  const compact = useCompactScreen();
+  const { proposal, pending } = usePendingProposal(
+    commerce.latest,
+    commerce.warehouseId,
+  );
   const warehouse = commerce.warehouses.find(
     (value) => value.id === commerce.warehouseId,
   );
   const cartWarehouse = commerce.warehouses.find(
     (value) => value.id === commerce.cart?.warehouse_id,
   );
-  const canConfirm =
-    commerce.ready &&
-    !commerce.busy &&
-    commerce.latest?.confirmation_required &&
-    proposal?.status === "pending" &&
-    proposal.warehouse_id === commerce.warehouseId &&
-    Date.parse(proposal.expires_at) > now;
-  const hasRemoval = proposal?.items.some(
-    (item) =>
-      item.target_quantity <
-      (commerce.cart?.items.find((row) => row.product_id === item.product_id)
-        ?.quantity || 0),
-  );
+  const canConfirm = commerce.ready && !commerce.busy && pending;
+  const hasRemoval = proposal ? isRemoval(proposal, commerce.cart) : false;
+  const step: 1 | 2 | 3 = pending
+    ? 3
+    : commerce.latest || commerce.document
+      ? 2
+      : 1;
   const navigate = (next: Section) => {
     setSection(next);
     history.pushState(
@@ -153,22 +153,13 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
-    if (proposal?.status !== "pending") return;
-    setNow(Date.now());
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, [proposal?.id, proposal?.status]);
-  useEffect(() => {
     if (confirmationId && proposal?.id !== confirmationId)
       setConfirmationId(null);
   }, [proposal?.id, confirmationId]);
-  useEffect(() => {
-    if (!commerce.documentResultId) return;
-    setSection("workspace");
-    history.pushState({}, "", "/");
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [commerce.documentResultId]);
 
+  function openConfirmation() {
+    if (proposal?.status === "pending") setConfirmationId(proposal.id);
+  }
   async function sendFromCart(message: string) {
     if (
       commerce.cart?.warehouse_id &&
@@ -228,41 +219,41 @@ export default function App() {
         <div className="nav-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
         <nav aria-label="Основная навигация">
           <button
-            className={`nav-item ${section === "workspace" ? "active" : ""}`}
+            className={clsx("nav-item", section === "workspace" && "active")}
             aria-label="Подбор с ассистентом"
             aria-current={section === "workspace" ? "page" : undefined}
             onClick={() => navigate("workspace")}
           >
             <MessageSquare size={18} />
-            <span>Подбор с ассистентом</span>
+            <span>{compact ? "Подбор" : "Подбор с ассистентом"}</span>
             <span className="active-dot" />
           </button>
           <button
-            className={`nav-item ${section === "catalog" ? "active" : ""}`}
+            className={clsx("nav-item", section === "catalog" && "active")}
             aria-label="Каталог товаров"
             aria-current={section === "catalog" ? "page" : undefined}
             onClick={() => navigate("catalog")}
           >
             <LayoutGrid size={18} />
-            <span>Каталог товаров</span>
+            <span>{compact ? "Каталог" : "Каталог товаров"}</span>
           </button>
           <button
-            className={`nav-item ${section === "upload" ? "active" : ""}`}
+            className={clsx("nav-item", section === "upload" && "active")}
             aria-label="Спецификация из файла"
             aria-current={section === "upload" ? "page" : undefined}
             onClick={() => navigate("upload")}
           >
             <FileUp size={18} />
-            <span>Спецификация</span>
+            <span>{compact ? "Файл" : "Спецификация"}</span>
           </button>
           <button
-            className={`nav-item ${section === "cart" ? "active" : ""}`}
+            className={clsx("nav-item", section === "cart" && "active")}
             aria-label="Моя корзина"
             aria-current={section === "cart" ? "page" : undefined}
             onClick={() => navigate("cart")}
           >
             <ShoppingBag size={18} />
-            <span>Моя корзина</span>
+            <span>{compact ? "Корзина" : "Моя корзина"}</span>
             {!!commerce.cart?.items.length && (
               <span className="nav-count">{commerce.cart.items.length}</span>
             )}
@@ -279,7 +270,14 @@ export default function App() {
             Ваш подбор
             <small>
               {commerce.messages.length
-                ? `${commerce.messages.filter((message) => message.role === "user").length} запросов`
+                ? `${commerce.messages.filter((message) => message.role === "user").length} ${plural(
+                    commerce.messages.filter(
+                      (message) => message.role === "user",
+                    ).length,
+                    "запрос",
+                    "запроса",
+                    "запросов",
+                  )}`
                 : "Начните с артикула или задачи"}
             </small>
           </span>
@@ -458,6 +456,9 @@ export default function App() {
               Подключаем вашу сессию…
             </div>
           )}
+          {(section === "workspace" || section === "upload") && (
+            <StepRail current={step} />
+          )}
           {section === "workspace" && (
             <>
               {commerce.document && (
@@ -487,11 +488,9 @@ export default function App() {
                 busy={commerce.busy}
                 ready={commerce.ready}
                 onSend={commerce.send}
-                onConfirm={() => {
-                  setNow(Date.now());
-                  if (proposal?.status === "pending")
-                    setConfirmationId(proposal.id);
-                }}
+                onConfirm={openConfirmation}
+                onOpenUpload={() => navigate("upload")}
+                onOpenCatalog={openSearch}
                 onOpenCart={() => navigate("cart")}
               />
             </>
@@ -499,9 +498,14 @@ export default function App() {
           {section === "upload" && (
             <UploadPanel
               document={commerce.document}
+              result={commerce.documentResultId ? commerce.latest : null}
+              cart={commerce.cart}
+              warehouses={commerce.warehouses}
+              warehouseId={commerce.warehouseId}
               ready={commerce.ready}
               busy={commerce.busy}
               warehouseName={warehouse?.city || warehouse?.name || ""}
+              onConfirm={openConfirmation}
               onUpload={commerce.uploadFile}
               onChangeLine={commerce.updateDocumentLine}
               onPropose={commerce.proposeDocument}
@@ -536,6 +540,15 @@ export default function App() {
               onSend={sendFromCart}
               onBrowse={() => navigate("catalog")}
               onRefresh={commerce.refresh}
+            />
+          )}
+          {compact && pending && proposal && barHidden !== proposal.id && (
+            <DecisionBar
+              proposal={proposal}
+              removal={hasRemoval}
+              busy={commerce.busy || !commerce.ready}
+              onConfirm={openConfirmation}
+              onDismiss={() => setBarHidden(proposal.id)}
             />
           )}
           <footer className="page-footer">

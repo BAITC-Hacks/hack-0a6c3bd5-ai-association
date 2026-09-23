@@ -7,6 +7,7 @@ import {
   Clock3,
   FileCheck2,
   FileText,
+  FileUp,
   Layers3,
   LoaderCircle,
   MapPin,
@@ -27,6 +28,8 @@ import {
   type Warehouse,
 } from "./api";
 import type { ChatEntry } from "./useCommerce";
+import { fieldNames, money, numbers, timeLabel } from "./format";
+import { ProposalComposition, usePendingProposal } from "./proposal";
 
 interface ChatPanelProps {
   messages: ChatEntry[];
@@ -38,35 +41,11 @@ interface ChatPanelProps {
   ready: boolean;
   onSend: (message: string) => Promise<void>;
   onConfirm: () => void;
+  onOpenUpload: () => void;
+  onOpenCatalog: () => void;
   onOpenCart: () => void;
 }
 
-const numbers = new Intl.NumberFormat("ru-RU");
-const dateTime = new Intl.DateTimeFormat("ru-RU", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-  timeZone: "Asia/Almaty",
-});
-const money = (value: number | null) =>
-  value === null ? "Цена не указана" : `${numbers.format(value)} ₸`;
-const timeLabel = (value: string) =>
-  Number.isNaN(Date.parse(value))
-    ? "Время не указано"
-    : dateTime.format(new Date(value));
-const fieldNames: Record<string, string> = {
-  current_a: "Номинальный ток, А",
-  poles: "Количество полюсов",
-  voltage_v: "Напряжение, В",
-  breaking_capacity_ka: "Отключающая способность, кА",
-  price_kzt: "Цена, ₸",
-  min_order_quantity: "Минимальная партия",
-  available_quantity: "Остаток на складе",
-  name: "Название товара",
-  description: "Описание товара",
-};
 const sourceLabels: Record<ChatResponse["answer_source"], string> = {
   fixture: "Офлайн-ответ",
   rules: "Проверка правилами",
@@ -118,14 +97,9 @@ function CheckState({ check }: { check: ProductCheck }) {
   );
 }
 
-function Evidence({
-  response,
-  expanded,
-}: {
-  response: ChatResponse;
-  expanded: boolean;
-}) {
+function Evidence({ response }: { response: ChatResponse }) {
   if (!response.checks.length) return null;
+  const expanded = response.checks.some((check) => check.status === "conflict");
   const productIds = [
     ...new Set(response.checks.map((check) => check.product_id)),
   ];
@@ -304,36 +278,24 @@ export default function ChatPanel({
   ready,
   onSend,
   onConfirm,
+  onOpenUpload,
+  onOpenCatalog,
   onOpenCart,
 }: ChatPanelProps) {
   const [input, setInput] = useState("");
   const [sendError, setSendError] = useState("");
-  const [now, setNow] = useState(Date.now());
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const proposal = latest?.proposal ?? null;
-  const proposalExpired = proposal
-    ? Date.parse(proposal.expires_at) <= now
-    : false;
-  const pending = Boolean(
-    proposal &&
-      proposal.status === "pending" &&
-      latest?.confirmation_required &&
-      proposal.warehouse_id === warehouseId &&
-      !proposalExpired,
-  );
+  const {
+    proposal,
+    pending,
+    expired: proposalExpired,
+  } = usePendingProposal(latest, warehouseId);
   const warehouse = warehouses.find((item) => item.id === warehouseId);
-  const proposalWarehouse = warehouses.find(
-    (item) => item.id === proposal?.warehouse_id,
-  );
   const lastAssistantId = [...messages]
     .reverse()
     .find((message) => message.role === "assistant")?.id;
 
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 15000);
-    return () => window.clearInterval(timer);
-  }, []);
   useEffect(() => {
     if (!messages.length) return;
     const thread = bottomRef.current?.closest<HTMLElement>(".commerce-thread");
@@ -395,33 +357,55 @@ export default function ChatPanel({
           {!messages.length && (
             <div className="commerce-welcome">
               <KonturSymbol />
-              <span className="commerce-eyebrow">
-                Внимание к каждой позиции
-              </span>
-              <h2>
-                Что нужно
-                <br />
-                <span>для вашего объекта?</span>
-              </h2>
-              <p>
-                Укажите артикул или опишите задачу. Проверим характеристики и
-                наличие, а решение о корзине останется за вами.
-              </p>
-              <div className="commerce-process">
-                <span>
-                  <MessageSquare size={15} />
-                  Запрос
-                </span>
-                <i />
-                <span>
-                  <SlidersHorizontal size={15} />
-                  Сверка
-                </span>
-                <i />
-                <span>
-                  <Check size={15} />
-                  Ваше решение
-                </span>
+              <div className="start-gate">
+                <div className="start-gate-head">
+                  <span className="commerce-eyebrow">Шаг 1 · с чего начать</span>
+                  <h2>Что нужно купить?</h2>
+                  <p>
+                    Два пути к одному результату. Опишите задачу словами или
+                    загрузите готовый список — дальше Контур сверит данные
+                    каталога и выбранного склада, а решение останется за вами.
+                  </p>
+                </div>
+                <div className="start-ways">
+                  <button
+                    type="button"
+                    className="start-way"
+                    disabled={busy || !ready}
+                    onClick={() => inputRef.current?.focus()}
+                  >
+                    <span className="start-way-top">
+                      <MessageSquare size={18} />
+                      <strong>Описать запрос</strong>
+                    </span>
+                    <p>
+                      Артикул, номинал или задача своими словами. Например:
+                      «Подбери 2 штуки на 160 А».
+                    </p>
+                    <span className="start-way-note">Поле ввода ниже</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="start-way"
+                    onClick={onOpenUpload}
+                  >
+                    <span className="start-way-top">
+                      <FileUp size={18} />
+                      <strong>Загрузить список</strong>
+                    </span>
+                    <p>
+                      XLSX, DOCX, текстовый PDF или фото спецификации. Строки
+                      можно исправить до проверки по каталогу.
+                    </p>
+                    <span className="start-way-note">До 50 строк · до 10 МБ</span>
+                  </button>
+                </div>
+                <div className="start-help">
+                  <span>Не знаете артикул?</span>
+                  <button type="button" onClick={onOpenCatalog}>
+                    Найти в каталоге
+                  </button>
+                </div>
               </div>
               <div className="commerce-start-prompts">
                 {prompts.map((prompt) => (
@@ -468,13 +452,24 @@ export default function ChatPanel({
                       </span>
                     )}
                   </div>
+                  {message.response &&
+                    (message.response.checks.some(
+                      (check) => check.status === "conflict",
+                    ) ? (
+                      <span className="verdict verdict-conflict">
+                        <TriangleAlert size={14} />
+                        Нужно уточнение
+                      </span>
+                    ) : message.id === lastAssistantId && pending ? (
+                      <span className="verdict verdict-ready">
+                        <Check size={14} />
+                        Проверено — можно подтвердить
+                      </span>
+                    ) : null)}
                   <p className="commerce-answer">{message.text}</p>
                   {message.response && (
                     <>
-                      <Evidence
-                        response={message.response}
-                        expanded={message.id === lastAssistantId}
-                      />
+                      <Evidence response={message.response} />
                       <div className="commerce-products">
                         {message.response.products.map((product) => (
                           <ResponseProduct
@@ -580,78 +575,23 @@ export default function ChatPanel({
         >
           <div className="commerce-panel-title">
             <div>
-              <span className="commerce-eyebrow">Ваше решение</span>
-              <h2>Состав комплекта</h2>
+              <span className="commerce-eyebrow">Шаг 3 · ваше решение</span>
+              <h2>Предложение</h2>
             </div>
             <Layers3 size={21} />
           </div>
           {pending && proposal ? (
             <>
-              <p className="commerce-proposal-intro">
-                Предложение готово. Проверьте, каким станет состав корзины.
-              </p>
-              <div className="commerce-proposal-place">
-                <MapPin size={14} />
-                {proposalWarehouse?.city ||
-                  proposalWarehouse?.name ||
-                  proposal.warehouse_id}
-              </div>
-              <div className="commerce-proposal-items">
-                {proposal.items.map((item) => {
-                  const product = latest?.products.find(
-                    (product) => product.id === item.product_id,
-                  );
-                  const existing = cart?.items.find(
-                    (product) => product.product_id === item.product_id,
-                  );
-                  const unit = product?.unit || existing?.unit || "";
-                  return (
-                    <div
-                      className="commerce-proposal-item"
-                      key={item.product_id}
-                    >
-                      <span className="commerce-product-sku">
-                        {product?.sku ||
-                          existing?.sku ||
-                          `ID ${item.product_id}`}
-                      </span>
-                      <h3>
-                        {product?.name ||
-                          existing?.name ||
-                          `Товар ${item.product_id}`}
-                      </h3>
-                      <div className="commerce-target-quantity">
-                        <span>
-                          {item.target_quantity === 0
-                            ? "Удалить из корзины"
-                            : "Итоговое количество"}
-                        </span>
-                        <strong>
-                          {numbers.format(item.target_quantity)} {unit}
-                        </strong>
-                      </div>
-                      <p className="commerce-current-quantity">
-                        Сейчас в корзине:{" "}
-                        {numbers.format(existing?.quantity ?? 0)} {unit}
-                      </p>
-                      {item.target_quantity > 0 && (
-                        <div className="commerce-unit-price">
-                          <span>Цена за единицу</span>
-                          <span>{money(item.unit_price_kzt)}</span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="commerce-proposal-total">
-                <span>Корзина после изменения</span>
-                <strong>{money(proposal.result_total_kzt)}</strong>
-              </div>
-              <p className="commerce-proposal-expiry">
-                <Clock3 size={12} />
-                До {timeLabel(proposal.expires_at)} · время Астаны
-              </p>
+              <span className="state-chip pending">
+                <Clock3 size={13} />
+                Ещё не в корзине
+              </span>
+              <ProposalComposition
+                proposal={proposal}
+                latest={latest}
+                cart={cart}
+                warehouses={warehouses}
+              />
               <button
                 type="button"
                 className="primary-button commerce-confirm-button"
@@ -661,10 +601,6 @@ export default function ChatPanel({
                 Проверить и подтвердить
                 <ArrowRight size={16} />
               </button>
-              <p className="commerce-no-mutation">
-                <ShieldCheck size={13} />
-                Предложение ещё не изменило корзину
-              </p>
             </>
           ) : (
             <div className="commerce-proposal-empty">
@@ -674,7 +610,7 @@ export default function ChatPanel({
               <h3>
                 {proposalExpired
                   ? "Предложение устарело"
-                  : "Сначала уточним детали"}
+                  : "Предложения пока нет"}
               </h3>
               <p>
                 {proposalExpired
@@ -694,11 +630,11 @@ export default function ChatPanel({
         <section className="commerce-cart-summary">
           <div className="commerce-cart-heading">
             <ShoppingBag size={18} />
-            <h3>Ваша корзина</h3>
+            <h3>В корзине</h3>
             <span>{cart?.items.length ?? "—"}</span>
           </div>
           <div className="commerce-cart-total">
-            <span>Подтверждённый состав</span>
+            <span>Подтверждено вами</span>
             <strong>{cart ? money(cart.total_kzt) : "Загружаем…"}</strong>
           </div>
           <button type="button" onClick={onOpenCart} disabled={!ready}>

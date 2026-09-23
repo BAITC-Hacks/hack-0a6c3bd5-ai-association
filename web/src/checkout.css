@@ -2,20 +2,20 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #687c9f;
+  color: #82735e;
 }
 .live-warehouse select {
   font: inherit;
-  font-size: 12px;
-  border: 1px solid #e3e9f3;
-  background: #fff;
-  color: #405878;
+  font-size: 13px;
+  border: 1px solid #e8d4cd;
+  background: #ffffff;
+  color: #6b5f4d;
   border-radius: 6px;
   padding: 7px 10px;
   max-width: 190px;
 }
 .live-warehouse select:focus-visible {
-  outline: 3px solid #c9d8ff;
+  outline: 3px solid #fbc2ad;
   outline-offset: 2px;
 }
 .commerce-error {
@@ -37,7 +37,7 @@
   font-size: 13px;
 }
 .commerce-error p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
   margin-top: 4px;
   overflow-wrap: anywhere;
@@ -52,8 +52,8 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 12px;
-  color: #6e83a5;
+  font-size: 13px;
+  color: #81735e;
   margin: 0 0 20px;
 }
 .purchase-dialog {
@@ -71,7 +71,7 @@
   border-bottom: 1px solid var(--line);
 }
 .purchase-items > div > svg {
-  color: #93a4c0;
+  color: #82735e;
   margin-top: 5px;
 }
 .purchase-items > div > div {
@@ -88,14 +88,14 @@
   font:
     10px "IBM Plex Mono",
     monospace;
-  color: #7587a1;
+  color: #817360;
   line-height: 1.8;
   margin-top: 5px;
   overflow-wrap: anywhere;
 }
 .purchase-items > div > span {
-  font-size: 12px;
-  color: #6a7f9c;
+  font-size: 13px;
+  color: #81735f;
   white-space: nowrap;
   margin-top: 5px;
 }
@@ -108,15 +108,15 @@
 }
 .purchase-total > span {
   font-size: 13px;
-  color: #73849d;
+  color: #807462;
 }
 .purchase-total > strong {
   font-size: 26px;
   letter-spacing: -0.8px;
-  color: #2f4769;
+  color: #574c41;
 }
 .server-cart {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 26px;
@@ -137,8 +137,8 @@
   margin: 8px 0;
 }
 .server-cart-heading p {
-  font-size: 12px;
-  color: #75869e;
+  font-size: 13px;
+  color: #7f7462;
   line-height: 1.8;
 }
 .server-cart-heading > button {
@@ -167,8 +167,8 @@
   place-items: center;
   min-width: 58px;
   height: 62px;
-  background: #f1f5fb;
-  color: #8ca0bf;
+  background: #f3ded7;
+  color: #82735e;
   border-radius: 7px;
 }
 .server-cart-product h3 {
@@ -179,15 +179,15 @@
   overflow-wrap: anywhere;
 }
 .server-cart-product p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
-  color: #7386a1;
+  color: #817360;
 }
 .server-cart-line-total {
   font-size: 22px;
   letter-spacing: -0.7px;
   white-space: nowrap;
-  color: #334e75;
+  color: #605448;
   margin-top: 21px;
 }
 .server-cart-edit {
@@ -202,26 +202,26 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 10px;
-  color: #7688a5;
+  font-size: 12px;
+  color: #81735f;
 }
 .server-cart-edit input {
   width: 112px;
   padding: 10px 12px;
-  border: 1px solid #dce5f3;
+  border: 1px solid #eacfc5;
   border-radius: 6px;
   font:
     13px "IBM Plex Mono",
     monospace;
-  color: #385378;
-  background: #fff;
+  color: #64584c;
+  background: #ffffff;
 }
 .server-cart-edit input:focus-visible {
-  outline: 3px solid #d8e4ff;
+  outline: 3px solid #fbccbb;
   outline-offset: 2px;
 }
 .server-cart-edit > button {
-  font-size: 11px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -231,7 +231,7 @@
   display: inline-flex;
   gap: 7px;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   color: #946453;
   padding: 10px 0;
 }
@@ -252,8 +252,8 @@
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 11px;
-  color: #7c8ba0;
+  font-size: 12px;
+  color: #7f7463;
   line-height: 1.9;
   max-width: 470px;
 }
@@ -264,18 +264,18 @@
 }
 .server-cart-summary > div > span {
   font-size: 13px;
-  color: #7a8aa2;
+  color: #807462;
 }
 .server-cart-summary > div > strong {
   font-size: 30px;
   white-space: nowrap;
   letter-spacing: -1px;
-  color: #2c466b;
+  color: #564c41;
 }
 .server-cart-disclaimer {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.9;
-  color: #7b8ba1;
+  color: #807462;
   margin-top: 24px;
   padding-top: 17px;
   border-top: 1px solid var(--line);
@@ -289,15 +289,15 @@
   gap: 17px;
 }
 .server-cart-empty > svg {
-  color: #92a6c7;
+  color: #9e6855;
 }
 .server-cart-empty h3 {
   font-size: 20px;
   letter-spacing: -0.5px;
 }
 .server-cart-empty > p {
-  font-size: 12px;
-  color: #8290a6;
+  font-size: 13px;
+  color: #7f7462;
   line-height: 1.8;
 }
 .catalog-discuss {
@@ -348,7 +348,7 @@
 }
 @media (max-width: 560px) {
   .live-warehouse select {
-    font-size: 11px;
+    font-size: 12px;
     max-width: 130px;
     padding: 6px;
   }
@@ -359,7 +359,7 @@
     gap: 10px;
   }
   .topbar-actions .concept-label {
-    font-size: 9px;
+    font-size: 11px;
   }
   .server-cart {
     padding: 20px 15px;
@@ -371,11 +371,11 @@
     font-size: 18px;
   }
   .server-cart-heading p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .server-cart-heading > .secondary-button {
     padding: 8px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .server-cart-row {
     grid-template-columns: 1fr;
@@ -394,7 +394,7 @@
     gap: 12px;
   }
   .server-cart-edit > button {
-    font-size: 10px;
+    font-size: 12px;
   }
   .server-cart-edit > .cart-remove {
     margin-left: 0;
@@ -414,16 +414,16 @@
     font-size: 24px;
   }
   .purchase-items strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .purchase-items > div > span {
-    font-size: 11px;
+    font-size: 12px;
   }
   .commerce-error {
     padding: 15px;
   }
   .commerce-error p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .server-cart-empty h3 {
     font-size: 18px;
@@ -442,8 +442,8 @@
   margin-bottom: 18px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
-  color: #526c9a;
+  background: #ffffff;
+  color: #81735e;
 }
 .document-return > svg {
   flex-shrink: 0;
@@ -459,9 +459,9 @@
 }
 .document-return span {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
-  color: #72829b;
+  color: #7f7462;
   margin-top: 3px;
 }
 @media (max-width: 560px) {

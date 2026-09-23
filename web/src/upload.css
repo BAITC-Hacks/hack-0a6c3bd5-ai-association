@@ -9,7 +9,7 @@
   list-style: none;
   padding: 0 0 25px;
   margin: 0 0 25px;
-  border-bottom: 1px solid #e2e8f1;
+  border-bottom: 1px solid #e6d3cd;
   gap: 22px;
 }
 .upload-workflow li {
@@ -24,39 +24,39 @@
   width: 30px;
   height: 30px;
   flex-shrink: 0;
-  border: 1px solid #dde5f2;
+  border: 1px solid #e8cfc6;
   border-radius: 50%;
-  color: #9aa8bd;
+  color: #82735e;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  background: #fafbfd;
+  font-size: 12px;
+  background: #f2e6e1;
 }
 .upload-workflow strong {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.6;
-  color: #94a0b4;
+  color: #807362;
 }
 .upload-workflow small {
-  font-size: 10px;
-  color: #9ba8bd;
+  font-size: 12px;
+  color: #81735e;
   margin-top: 3px;
 }
 .upload-workflow .active > span {
-  border-color: #bfd0f7;
-  background: #edf3ff;
+  border-color: #f2baa6;
+  background: #fcdacd;
   color: var(--blue);
 }
 .upload-workflow .active strong {
-  color: #4d6d9a;
+  color: #8d5c49;
 }
 .upload-workflow .complete > span {
-  color: #4a8d79;
+  color: #43806e;
   background: #edf7f3;
   border-color: #d4e9df;
 }
 .upload-workflow .complete strong {
-  color: #667f8f;
+  color: #7f7462;
 }
 .upload-start-layout {
   display: grid;
@@ -68,8 +68,8 @@
   min-width: 0;
 }
 .upload-dropzone {
-  background: #fff;
-  border: 1px dashed #bfcde3;
+  background: #ffffff;
+  border: 1px dashed #d9b8ac;
   border-radius: 12px;
   text-align: center;
   padding: 39px 30px 30px;
@@ -80,26 +80,26 @@
     box-shadow 0.2s;
 }
 .upload-dropzone.dragging {
-  background: #f0f5ff;
-  border-color: #648eeb;
-  box-shadow: inset 0 0 0 3px #e1eaff;
+  background: #fddcd0;
+  border-color: #e47a53;
+  box-shadow: inset 0 0 0 3px #fcd2c3;
 }
 .upload-dropzone.disabled {
-  border-color: #dce3ec;
+  border-color: #e8e5e0;
 }
 .upload-sheet-symbol {
   height: 87px;
   width: 78px;
   position: relative;
   margin: 0 auto 27px;
-  color: #7c9bd0;
+  color: #af6043;
 }
 .upload-sheet-symbol > span {
   position: absolute;
   inset: 0;
-  border: 1px solid #dce5f3;
+  border: 1px solid #eacfc5;
   border-radius: 7px;
-  background: #f8faff;
+  background: #fde1d7;
   transform: rotate(6deg);
   z-index: 0;
 }
@@ -109,7 +109,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 16px 14px;
-  background: #fff;
+  background: #ffffff;
   transform: rotate(-6deg);
   z-index: 2;
 }
@@ -120,15 +120,15 @@
 .upload-sheet-symbol i {
   width: 33px;
   height: 5px;
-  border-top: 1px solid #cad7ee;
-  border-bottom: 1px solid #cad7ee;
+  border-top: 1px solid #e5c1b4;
+  border-bottom: 1px solid #e5c1b4;
 }
 .upload-eyebrow {
   font-family: "IBM Plex Mono", monospace;
   text-transform: uppercase;
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.7px;
-  color: #8194b0;
+  color: #81735e;
   line-height: 1.8;
 }
 .upload-dropzone h2 {
@@ -136,17 +136,17 @@
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -1.2px;
-  color: #344e74;
+  color: #605448;
   margin-top: 14px;
 }
 .upload-dropzone h2 > span {
-  color: #8497b5;
+  color: #81735e;
   font-weight: 450;
 }
 .upload-dropzone > p:not(.upload-drop-limit) {
   font-size: 13px;
   line-height: 1.9;
-  color: #7b8da8;
+  color: #81735f;
   max-width: 390px;
   margin: 18px auto 24px;
 }
@@ -156,12 +156,12 @@
   justify-content: center;
   gap: 10px;
   padding: 13px 18px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .upload-drop-hint {
   display: block;
-  font-size: 10px;
-  color: #97a7c0;
+  font-size: 12px;
+  color: #82735e;
   margin-top: 12px;
 }
 .upload-formats {
@@ -173,23 +173,23 @@
 }
 .upload-formats > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
-  color: #8a9dbc;
-  border: 1px solid #e3eaf5;
-  background: #f9fbff;
+  font-size: 11px;
+  color: #82735d;
+  border: 1px solid #ebd4cb;
+  background: #fde2d8;
   border-radius: 4px;
   padding: 4px 7px;
 }
 .upload-drop-limit {
-  font-size: 10px;
-  color: #92a3bd;
+  font-size: 12px;
+  color: #82735e;
   margin-top: 11px;
   line-height: 1.7;
 }
 .upload-examples {
   margin-top: 22px;
-  background: #fff;
-  border: 1px solid #e5eaf3;
+  background: #ffffff;
+  border: 1px solid #e8d6cf;
   border-radius: 9px;
   padding: 19px;
 }
@@ -197,16 +197,16 @@
   display: flex;
   gap: 9px;
   align-items: flex-start;
-  color: #8aa1c4;
+  color: #9f6753;
 }
 .upload-examples-heading h3 {
-  font-size: 12px;
-  color: #67809f;
+  font-size: 13px;
+  color: #82735e;
   font-weight: 600;
 }
 .upload-examples-heading p {
-  font-size: 10px;
-  color: #92a3b9;
+  font-size: 12px;
+  color: #82735e;
   line-height: 1.7;
   margin-top: 5px;
 }
@@ -221,28 +221,28 @@
   align-items: center;
   gap: 7px;
   padding: 10px 8px;
-  border: 1px solid #e5ebf5;
+  border: 1px solid #ebd6ce;
   border-radius: 6px;
   min-width: 0;
-  color: #849cbe;
-  background: #fbfcff;
+  color: #81735e;
+  background: #fde3da;
 }
 .upload-example-links > a:hover {
-  border-color: #b8cbf1;
-  background: #f2f6ff;
-  color: #527fd0;
+  border-color: #eab5a1;
+  background: #fdddd2;
+  color: #c86845;
 }
 .upload-example-links strong {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   display: block;
 }
 .upload-example-links small {
-  font-size: 8px;
+  font-size: 11px;
   margin-top: 4px;
   line-height: 1.5;
-  color: #94a4bc;
+  color: #81735e;
 }
 .upload-example-links > a > svg:last-child {
   margin-left: auto;
@@ -259,7 +259,7 @@
   line-height: 1.4;
   letter-spacing: -0.6px;
   font-weight: 500;
-  color: #526f96;
+  color: #82735d;
   margin: 13px 0 25px;
 }
 .upload-instruction-row {
@@ -267,24 +267,24 @@
   align-items: flex-start;
   gap: 13px;
   padding: 15px 0;
-  border-top: 1px solid #e2e8f1;
+  border-top: 1px solid #e6d3cd;
 }
 .upload-instruction-row > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  color: #8ca4c5;
+  font-size: 12px;
+  color: #9f6854;
   padding-top: 3px;
 }
 .upload-instruction-row strong {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: #6b82a2;
+  color: #82735e;
   line-height: 1.6;
 }
 .upload-instruction-row p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.85;
-  color: #8b9db6;
+  color: #81735d;
   margin-top: 6px;
 }
 .upload-photo-note {
@@ -293,45 +293,45 @@
   gap: 9px;
   margin: 13px 0 21px;
   padding: 13px;
-  background: #edf2fa;
+  background: #f2dbd3;
   border-radius: 7px;
-  color: #7e98bf;
+  color: #a16753;
 }
 .upload-photo-note > p {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.9;
-  color: #7c91b0;
+  color: #82735e;
 }
 .upload-safe-note {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.9;
-  color: #8d9eb6;
+  color: #82735f;
 }
 .upload-safe-note > svg {
   margin-top: 2px;
-  color: #829fc1;
+  color: #a06752;
 }
 .upload-chat-link {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #6f8ebd;
-  font-size: 11px;
+  color: #a4654f;
+  font-size: 12px;
   text-align: left;
   line-height: 1.7;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid #e2e8f1;
+  border-top: 1px solid #e6d3cd;
   width: 100%;
 }
 .upload-chat-link > svg:last-child {
   margin-left: auto;
 }
 .upload-chat-link:hover {
-  color: #315cea;
+  color: #e35724;
 }
 .upload-local-error {
   display: flex;
@@ -343,7 +343,7 @@
   border-radius: 8px;
   color: #956c3a;
   margin-bottom: 17px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
 }
 .upload-local-error > svg {
@@ -355,7 +355,7 @@
 }
 .upload-local-error > button {
   margin-left: auto;
-  color: #a0886c;
+  color: #887258;
   padding: 3px;
   display: flex;
 }
@@ -363,13 +363,13 @@
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
-  color: #6788bb;
+  color: #a4654d;
   margin-bottom: 17px;
   padding: 10px 13px;
-  background: #edf3ff;
-  border: 1px solid #dae5fb;
+  background: #fcdacd;
+  border: 1px solid #f6cdbe;
   border-radius: 7px;
 }
 .upload-busy > span {
@@ -393,8 +393,8 @@
 }
 .upload-review-main {
   min-width: 0;
-  background: #fff;
-  border: 1px solid #e0e7f2;
+  background: #ffffff;
+  border: 1px solid #e8d2ca;
   border-radius: 11px;
   overflow: hidden;
 }
@@ -403,7 +403,7 @@
   align-items: center;
   gap: 12px;
   padding: 23px 20px;
-  border-bottom: 1px solid #e9edf4;
+  border-bottom: 1px solid #e8d9d3;
 }
 .upload-document-heading > div {
   min-width: 0;
@@ -414,23 +414,23 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  border: 1px solid #e0e8f6;
+  border: 1px solid #eed2c8;
   border-radius: 8px;
-  background: #f6f9ff;
-  color: #809dcb;
+  background: #fde0d5;
+  color: #aa6349;
 }
 .upload-document-heading h2 {
   font-size: 17px;
   line-height: 1.6;
   font-weight: 600;
   letter-spacing: -0.3px;
-  color: #536f96;
+  color: #82735e;
   overflow-wrap: anywhere;
   margin-top: 4px;
 }
 .upload-document-heading p {
-  font-size: 10px;
-  color: #8a9db8;
+  font-size: 12px;
+  color: #81735e;
   line-height: 1.8;
   margin-top: 3px;
 }
@@ -441,7 +441,7 @@
   justify-content: center;
   gap: 6px;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 12px;
   padding: 9px 10px;
   flex-shrink: 0;
 }
@@ -454,23 +454,23 @@
   background: #fff9ef;
   border: 1px solid #f2e6d1;
   border-radius: 7px;
-  color: #a1814b;
+  color: #8d7142;
 }
 .upload-warnings > svg {
   margin-top: 2px;
 }
 .upload-warnings h3 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.7;
-  color: #987743;
+  color: #8f703f;
 }
 .upload-warnings ul {
   padding: 0 0 0 16px;
   margin: 6px 0 0;
 }
 .upload-warnings li {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
   overflow-wrap: anywhere;
 }
@@ -485,13 +485,13 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
-  color: #708bab;
+  color: #82735d;
 }
 .upload-review-intro > p {
-  font-size: 10px;
-  color: #91a2ba;
+  font-size: 12px;
+  color: #82735e;
   line-height: 1.7;
   text-align: right;
 }
@@ -503,17 +503,17 @@
 }
 .upload-column-labels {
   padding: 10px 20px;
-  background: #f7f9fd;
-  border-top: 1px solid #e8edf6;
-  border-bottom: 1px solid #e8edf6;
+  background: #f5e3dc;
+  border-top: 1px solid #ecd8d1;
+  border-bottom: 1px solid #ecd8d1;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
-  color: #8a9ebc;
+  font-size: 11px;
+  color: #82735d;
   line-height: 1.8;
 }
 .upload-line {
   padding: 17px 20px;
-  border-bottom: 1px solid #edf0f6;
+  border-bottom: 1px solid #eadcd7;
   align-items: start;
   transition: background-color 0.16s;
 }
@@ -521,7 +521,7 @@
   border-bottom: 0;
 }
 .upload-line.excluded {
-  background: #fafbfd;
+  background: #f2e6e1;
 }
 .upload-line-select {
   padding-top: 10px;
@@ -542,28 +542,28 @@
 }
 .upload-line-select label > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  color: #869cbb;
+  font-size: 12px;
+  color: #81735d;
 }
 .upload-line-select small {
-  font-size: 8px;
-  color: #a0acc0;
+  font-size: 11px;
+  color: #81735f;
   margin-top: 8px;
 }
 .upload-line.excluded .upload-line-select label > span {
-  color: #a7b4c8;
+  color: #81735d;
 }
 .upload-line textarea,
 .upload-line input:not([type="checkbox"]),
 .upload-line select {
   width: 100%;
   min-width: 0;
-  border: 1px solid #dfe7f3;
+  border: 1px solid #e9d1c8;
   border-radius: 6px;
-  background: #fff;
-  color: #5c759a;
+  background: #ffffff;
+  color: #82735d;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   padding: 9px 10px;
   outline: none;
@@ -581,13 +581,13 @@
 .upload-line input:not([type="checkbox"]) {
   height: 41px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 12px;
+  font-size: 13px;
 }
 .upload-line textarea:disabled,
 .upload-line input:disabled:not([type="checkbox"]),
 .upload-line select:disabled {
-  color: #a3aec1;
-  background: #f7f9fc;
+  color: #817360;
+  background: #f2e3de;
   cursor: not-allowed;
 }
 .upload-line [aria-invalid="true"] {
@@ -597,11 +597,11 @@
 .upload-line textarea:focus,
 .upload-line input:not([type="checkbox"]):focus,
 .upload-line select:focus {
-  border-color: #92b0e8;
-  box-shadow: 0 0 0 3px #edf3ff;
+  border-color: #e1997f;
+  box-shadow: 0 0 0 3px #fcdacd;
 }
 .upload-field-error {
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.65;
   color: #a2743b;
   padding: 6px 1px 0;
@@ -612,43 +612,43 @@
 .upload-no-lines {
   padding: 35px 22px;
   text-align: center;
-  color: #869cbd;
+  color: #82735f;
 }
 .upload-no-lines > svg {
   margin-bottom: 14px;
 }
 .upload-no-lines h3 {
   font-size: 17px;
-  color: #6983a7;
+  color: #81735e;
   margin-bottom: 10px;
 }
 .upload-no-lines p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.9;
-  color: #8b9fb9;
+  color: #82735e;
   margin-bottom: 20px;
 }
 .upload-review-summary {
   position: sticky;
   top: 20px;
-  border: 1px solid #dfe7f5;
+  border: 1px solid #ecd1c7;
   border-radius: 10px;
   padding: 22px;
-  background: #fff;
+  background: #ffffff;
   min-width: 0;
 }
 .upload-summary-heading h2 {
   font-size: 21px;
   line-height: 1.4;
   letter-spacing: -0.5px;
-  color: #48658f;
+  color: #835545;
   font-weight: 600;
   margin-top: 7px;
 }
 .upload-summary-heading p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.85;
-  color: #8a9db8;
+  color: #81735e;
   margin-top: 12px;
 }
 .upload-review-warehouse {
@@ -656,17 +656,17 @@
   align-items: center;
   gap: 9px;
   margin-top: 23px;
-  color: #7998c3;
+  color: #a5654d;
 }
 .upload-review-warehouse small {
-  font-size: 10px;
-  color: #9aabc2;
+  font-size: 12px;
+  color: #81735d;
 }
 .upload-review-warehouse strong {
   display: block;
   font-size: 13px;
   line-height: 1.7;
-  color: #6a86aa;
+  color: #82735d;
   font-weight: 600;
   margin-top: 4px;
 }
@@ -676,42 +676,42 @@
   gap: 13px;
   padding: 20px 0;
   margin: 19px 0;
-  border-top: 1px solid #e9edf5;
-  border-bottom: 1px solid #e9edf5;
+  border-top: 1px solid #ead9d3;
+  border-bottom: 1px solid #ead9d3;
 }
 .upload-line-counts dt {
-  font-size: 10px;
-  color: #93a4bd;
+  font-size: 12px;
+  color: #81735e;
   line-height: 1.7;
 }
 .upload-line-counts dd {
   font-family: "IBM Plex Mono", monospace;
   font-size: 25px;
   font-weight: 400;
-  color: #5f7ea9;
+  color: #82735d;
   letter-spacing: -1px;
   margin: 7px 0 0;
 }
 .upload-line-counts dd > span {
   font:
-    10px "Manrope",
+    10px "Onest Variable",
     sans-serif;
   letter-spacing: 0;
-  color: #a0aec2;
+  color: #82735f;
   margin-left: 7px;
 }
 .upload-line-counts > div:last-child dd {
-  color: #95a7c3;
+  color: #81735e;
 }
 .upload-validation-summary {
   display: flex;
   align-items: flex-start;
   gap: 7px;
-  color: #a78856;
+  color: #8b7148;
   padding: 0 0 16px;
 }
 .upload-validation-summary > p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
 }
 .upload-validation-summary > svg {
@@ -723,26 +723,26 @@
   justify-content: center;
   gap: 7px;
   width: 100%;
-  font-size: 11px;
+  font-size: 12px;
   padding: 13px 8px;
 }
 .upload-propose > .lucide-loader-circle {
   animation: upload-spin 0.9s linear infinite;
 }
 .upload-final-quantity {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.85;
-  color: #8e9fb8;
+  color: #82735d;
   margin: 16px 0;
 }
 .upload-review-summary > .upload-safe-note {
   padding-top: 15px;
-  border-top: 1px solid #eaf0f7;
+  border-top: 1px solid #edd9d2;
 }
 .upload-panel button:focus-visible,
 .upload-panel a:focus-visible,
 .upload-line input[type="checkbox"]:focus-visible {
-  outline: 3px solid #a3bcf5;
+  outline: 3px solid #f0a68c;
   outline-offset: 4px;
 }
 @media (min-width: 1600px) {
@@ -821,7 +821,7 @@
     padding-right: 15px;
   }
   .upload-column-labels {
-    font-size: 8px;
+    font-size: 11px;
   }
   .upload-line-select label {
     gap: 5px;
@@ -830,7 +830,7 @@
   .upload-line input:not([type="checkbox"]),
   .upload-line select {
     padding: 8px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .upload-review-summary {
     padding: 18px;
@@ -839,7 +839,7 @@
     font-size: 19px;
   }
   .upload-propose {
-    font-size: 10px;
+    font-size: 12px;
     gap: 5px;
   }
   .upload-warnings {
@@ -890,7 +890,7 @@
   }
   .upload-review-summary > .upload-propose {
     max-width: 350px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .upload-review-summary > .upload-chat-link {
     max-width: 350px;
@@ -899,10 +899,10 @@
     gap: 11px;
   }
   .upload-workflow strong {
-    font-size: 11px;
+    font-size: 12px;
   }
   .upload-workflow small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .upload-document-heading > button {
     margin-left: auto;
@@ -915,7 +915,7 @@
   .upload-line textarea,
   .upload-line input:not([type="checkbox"]),
   .upload-line select {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 @media (max-width: 560px) {
@@ -932,10 +932,10 @@
   .upload-workflow li > span {
     width: 25px;
     height: 25px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .upload-workflow strong {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.6;
   }
   .upload-workflow small {
@@ -951,23 +951,23 @@
     margin-bottom: 24px;
   }
   .upload-dropzone > .upload-eyebrow {
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: 0.5px;
   }
   .upload-dropzone h2 {
     font-size: 29px;
   }
   .upload-dropzone > p:not(.upload-drop-limit) {
-    font-size: 12px;
+    font-size: 13px;
     margin-top: 16px;
     line-height: 1.85;
   }
   .upload-choose {
-    font-size: 12px;
+    font-size: 13px;
     padding: 13px 17px;
   }
   .upload-drop-limit {
-    font-size: 9px;
+    font-size: 11px;
   }
   .upload-formats {
     margin-top: 22px;
@@ -976,17 +976,17 @@
     padding: 17px 14px;
   }
   .upload-examples-heading h3 {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.7;
   }
   .upload-examples-heading p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .upload-example-links > a {
     padding: 11px 9px;
   }
   .upload-example-links small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .upload-instructions {
     display: block;
@@ -1004,14 +1004,14 @@
     font-size: 13px;
   }
   .upload-instruction-row p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .upload-photo-note > p,
   .upload-safe-note {
-    font-size: 11px;
+    font-size: 12px;
   }
   .upload-chat-link {
-    font-size: 12px;
+    font-size: 13px;
   }
   .upload-review-main {
     border-radius: 9px;
@@ -1037,16 +1037,16 @@
   }
   .upload-document-heading > button {
     margin: 4px 0 0 43px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .upload-review-intro {
     padding: 16px 14px;
   }
   .upload-review-intro > span {
-    font-size: 11px;
+    font-size: 12px;
   }
   .upload-review-intro > p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .upload-column-labels {
     display: none;
@@ -1070,7 +1070,7 @@
   .upload-line-select label > span {
     padding-left: 1px;
     margin-top: 5px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .upload-line-select small {
     display: none;
@@ -1086,9 +1086,9 @@
   }
   .upload-mobile-label {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.8;
-    color: #8da0bb;
+    color: #82735d;
     margin-bottom: 5px;
   }
   .upload-line textarea,
@@ -1109,7 +1109,7 @@
     height: 44px;
   }
   .upload-field-error {
-    font-size: 10px;
+    font-size: 12px;
   }
   .upload-warnings {
     margin: 15px 14px 0;
@@ -1117,7 +1117,7 @@
     gap: 8px;
   }
   .upload-warnings li {
-    font-size: 11px;
+    font-size: 12px;
   }
   .upload-review-summary {
     padding: 22px 19px;
@@ -1138,22 +1138,22 @@
     padding: 14px 12px;
   }
   .upload-final-quantity {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.9;
   }
   .upload-review-summary > .upload-safe-note {
-    font-size: 11px;
-  }
-  .upload-validation-summary > p {
     font-size: 12px;
   }
+  .upload-validation-summary > p {
+    font-size: 13px;
+  }
   .upload-local-error {
-    font-size: 11px;
+    font-size: 12px;
     padding: 12px;
     gap: 8px;
   }
   .upload-busy {
-    font-size: 11px;
+    font-size: 12px;
   }
   .upload-panel .upload-choose:disabled,
   .upload-panel .upload-propose:disabled {

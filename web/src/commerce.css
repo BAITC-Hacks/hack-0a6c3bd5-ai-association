@@ -10,7 +10,7 @@
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: 13px;
-  background: #fff;
+  background: #ffffff;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@
   gap: 14px;
   padding: 18px 23px;
   border-bottom: 1px solid var(--line);
-  font-size: 12px;
+  font-size: 13px;
 }
 .commerce-conversation-head > div {
   display: flex;
@@ -37,7 +37,7 @@
 .commerce-status-dot {
   width: 6px;
   height: 6px;
-  background: #a7b3c3;
+  background: #c0b7aa;
   border-radius: 50%;
 }
 .commerce-status-dot.ready {
@@ -47,8 +47,8 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #708099;
-  font-size: 11px;
+  color: #7f7462;
+  font-size: 12px;
   white-space: nowrap;
 }
 .commerce-thread {
@@ -56,7 +56,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: #d5dce8 transparent;
+  scrollbar-color: #e4e0d9 transparent;
   max-height: 750px;
   min-height: 420px;
   flex: 1;
@@ -68,9 +68,9 @@
   gap: 3px;
   width: 38px;
   height: 39px;
-  border: 1px solid #e0e8fc;
+  border: 1px solid #f8d1c3;
   border-radius: 10px;
-  background: #f0f4ff;
+  background: #fddcd0;
   color: var(--blue);
   flex-shrink: 0;
 }
@@ -104,28 +104,28 @@
 }
 .commerce-eyebrow {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: #8390a5;
+  color: #7e7463;
 }
 .commerce-welcome h2 {
   font-size: 35px;
   line-height: 1.22;
   letter-spacing: -1.4px;
-  color: #243451;
+  color: #433a32;
   font-weight: 650;
   margin-bottom: 18px;
 }
 .commerce-welcome h2 span {
-  color: #8494af;
+  color: #81735f;
   font-weight: 450;
 }
 .commerce-welcome > p {
   font-size: 14px;
   line-height: 1.9;
-  color: #6f7e96;
+  color: #7f7463;
   max-width: 450px;
 }
 .commerce-process {
@@ -133,18 +133,18 @@
   align-items: center;
   gap: 9px;
   margin: 25px 0 26px;
-  color: #6a7f9e;
+  color: #81735e;
 }
 .commerce-process > span {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .commerce-process i {
   height: 1px;
-  background: #dce3ee;
+  background: #e3cfc7;
   flex: 1;
   max-width: 35px;
   min-width: 8px;
@@ -160,23 +160,23 @@
   align-items: center;
   text-align: left;
   gap: 10px;
-  background: #fafbfe;
-  border: 1px solid #e7edf6;
+  background: #f7e4dd;
+  border: 1px solid #ecd7cf;
   border-radius: 7px;
   padding: 13px 15px;
-  color: #6480ac;
+  color: #81735e;
 }
 .commerce-start-prompts button:hover:not(:disabled) {
-  background: #f1f5ff;
-  border-color: #cbd9f7;
+  background: #fddcd1;
+  border-color: #f1c2b1;
 }
 .commerce-start-prompts strong {
   font-size: 13px;
-  color: #506782;
+  color: #7a6c58;
 }
 .commerce-start-prompts small {
-  font-size: 11px;
-  color: #8393a9;
+  font-size: 12px;
+  color: #807360;
   margin-top: 5px;
 }
 .commerce-message {
@@ -187,15 +187,15 @@
   margin-left: auto;
   max-width: 85%;
   width: fit-content;
-  border: 1px solid #e6ebf5;
+  border: 1px solid #ebd6cf;
   border-radius: 10px 10px 2px 10px;
-  background: #f4f6fb;
+  background: #f1e1db;
   padding: 13px 17px;
 }
 .commerce-message-author {
   display: block;
-  font-size: 10px;
-  color: #8391a6;
+  font-size: 12px;
+  color: #7f7463;
   margin-bottom: 6px;
 }
 .commerce-message.user p {
@@ -203,7 +203,7 @@
   line-height: 1.85;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  color: #526783;
+  color: #7c6e59;
 }
 .commerce-assistant-head {
   display: flex;
@@ -234,26 +234,26 @@
 }
 .commerce-assistant-head > span:last-child:not(.commerce-symbol) {
   margin-left: auto;
-  font-size: 9px;
+  font-size: 11px;
   font-family: "IBM Plex Mono", monospace;
-  color: #8493aa;
-  background: #f6f8fb;
-  border: 1px solid #e9edf3;
+  color: #807360;
+  background: #f0e3de;
+  border: 1px solid #f1efeb;
   padding: 4px 6px;
   border-radius: 4px;
 }
 .commerce-answer {
   font-size: 13px;
   line-height: 1.95;
-  color: #52647e;
+  color: #786b58;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 .commerce-evidence {
   margin-top: 20px;
-  border: 1px solid #e0e7f2;
+  border: 1px solid #e8d2ca;
   border-radius: 9px;
-  background: #fff;
+  background: #ffffff;
   overflow: hidden;
 }
 .commerce-evidence > summary {
@@ -263,7 +263,7 @@
   list-style: none;
   cursor: pointer;
   padding: 15px;
-  background: #f9fbff;
+  background: #fde2d8;
 }
 .commerce-evidence > summary::-webkit-details-marker,
 .commerce-origins > summary::-webkit-details-marker {
@@ -275,13 +275,13 @@
   display: block;
 }
 .commerce-evidence > summary small {
-  font-size: 10px;
-  color: #8794aa;
+  font-size: 12px;
+  color: #807462;
   margin-top: 4px;
 }
 .commerce-evidence-icon {
-  color: #6785ba;
-  background: #eaf0fd;
+  color: #a4654e;
+  background: #f9d8cc;
   width: 29px;
   height: 30px;
   border-radius: 7px;
@@ -290,24 +290,24 @@
 }
 .commerce-disclosure {
   margin-left: auto;
-  color: #8f9cb2;
+  color: #807360;
   transition: transform 0.18s;
 }
 .commerce-evidence[open] > summary .commerce-disclosure {
   transform: rotate(180deg);
 }
 .commerce-evidence-content {
-  border-top: 1px solid #e6ebf4;
+  border-top: 1px solid #e9d6d0;
 }
 .commerce-check-group {
   padding: 0 14px;
 }
 .commerce-check-group h4 {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1.7;
-  color: #7387a5;
+  color: #81735e;
   margin: 15px 0 9px;
   overflow-wrap: anywhere;
 }
@@ -319,14 +319,14 @@
   align-items: start;
 }
 .commerce-check-heading {
-  font-size: 9px;
-  color: #8898b0;
-  border-bottom: 1px solid #e8edf5;
+  font-size: 11px;
+  color: #81735f;
+  border-bottom: 1px solid #ead8d1;
   padding: 8px 0;
 }
 .commerce-check-row {
   padding: 11px 0;
-  border-bottom: 1px solid #edf0f5;
+  border-bottom: 1px solid #f3f1ef;
 }
 .commerce-check-row.conflict {
   margin: 0 -14px;
@@ -336,14 +336,14 @@
   border-bottom: 1px solid #f4e9d6;
 }
 .commerce-check-values {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
-  color: #697a94;
+  color: #7f7462;
 }
 .commerce-check-values > strong {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  color: #466080;
+  color: #736653;
   overflow-wrap: anywhere;
 }
 .commerce-check-row.conflict .commerce-check-values > strong:last-child {
@@ -360,39 +360,39 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.7;
   flex-shrink: 0;
 }
 .commerce-check-state.match {
-  color: #458474;
+  color: #438071;
 }
 .commerce-check-state.conflict {
   color: #a47734;
 }
 .commerce-check-state.unknown {
-  color: #8391a6;
+  color: #7f7463;
 }
 .commerce-origins {
-  font-size: 10px;
+  font-size: 12px;
   text-align: right;
   min-width: 0;
   max-width: 70%;
 }
 .commerce-origins summary {
   cursor: pointer;
-  color: #7d8fab;
+  color: #82735e;
   list-style: none;
   line-height: 1.7;
 }
 .commerce-origins summary span {
-  color: #a0abc0;
+  color: #81735f;
   margin-left: 2px;
 }
 .commerce-origins dl {
   margin: 8px 0 2px;
-  background: #f4f6fa;
-  border: 1px solid #e7ecf4;
+  background: #efe2dd;
+  border: 1px solid #e9d7d1;
   border-radius: 5px;
   padding: 8px;
   text-align: left;
@@ -405,14 +405,14 @@
 }
 .commerce-origins dt {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
-  color: #8b9ab0;
+  font-size: 11px;
+  color: #817360;
   overflow-wrap: anywhere;
 }
 .commerce-origins dd {
   margin: 3px 0 0;
-  font-size: 11px;
-  color: #596c89;
+  font-size: 12px;
+  color: #81735e;
   overflow-wrap: anywhere;
 }
 .commerce-evidence-note {
@@ -421,9 +421,9 @@
   gap: 7px;
   margin: 0;
   padding: 12px 14px;
-  background: #fafbfe;
-  color: #8493a9;
-  font-size: 10px;
+  background: #f7e4dd;
+  color: #807361;
+  font-size: 12px;
   line-height: 1.7;
 }
 .commerce-products {
@@ -432,10 +432,10 @@
   margin-top: 16px;
 }
 .commerce-product {
-  border: 1px solid #e2e9f3;
+  border: 1px solid #e9d3cc;
   border-radius: 8px;
   padding: 15px;
-  background: #fff;
+  background: #ffffff;
 }
 .commerce-product-head {
   display: flex;
@@ -448,18 +448,18 @@
   width: 39px;
   height: 41px;
   flex-shrink: 0;
-  border: 1px solid #e9edf4;
+  border: 1px solid #e8d9d3;
   border-radius: 7px;
-  background: #f7f9fc;
-  color: #879cbb;
+  background: #f2e3de;
+  color: #81735e;
 }
 .commerce-product-head > div {
   min-width: 0;
 }
 .commerce-product-sku {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  color: #8b99b0;
+  font-size: 12px;
+  color: #817360;
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -467,7 +467,7 @@
   font-size: 13px;
   line-height: 1.7;
   font-weight: 600;
-  color: #536884;
+  color: #7d6f5a;
   margin-top: 5px;
   overflow-wrap: anywhere;
 }
@@ -478,13 +478,13 @@
   margin: 16px 0;
 }
 .commerce-product-facts dt {
-  font-size: 10px;
-  color: #8a99b0;
+  font-size: 12px;
+  color: #807460;
   margin-bottom: 6px;
 }
 .commerce-product-facts dd {
   font-size: 13px;
-  color: #496480;
+  color: #756854;
   font-weight: 650;
   margin: 0;
   line-height: 1.5;
@@ -496,8 +496,8 @@
   display: flex;
   align-items: flex-start;
   gap: 5px;
-  color: #8997ac;
-  font-size: 9px;
+  color: #807462;
+  font-size: 11px;
   line-height: 1.6;
 }
 .commerce-product-source > svg {
@@ -508,7 +508,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  border-top: 1px solid #edf0f6;
+  border-top: 1px solid #eadcd7;
   margin-top: 13px;
   padding-top: 11px;
 }
@@ -516,16 +516,16 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #5279c7;
-  font-size: 11px;
+  color: #bf6746;
+  font-size: 12px;
   text-align: left;
   line-height: 1.6;
 }
 .commerce-product-actions button:last-child {
-  color: #7b8da9;
+  color: #82735f;
 }
 .commerce-product-actions button:hover:not(:disabled) {
-  color: #214cc7;
+  color: #b54a23;
 }
 .commerce-product-docs {
   display: flex;
@@ -538,21 +538,21 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
-  color: #778aa9;
+  color: #81735d;
 }
 .commerce-product-docs a {
   text-decoration: underline;
   text-underline-offset: 3px;
-  color: #4d78c7;
+  color: #bf6342;
 }
 .commerce-thinking {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #7d8fa9;
-  font-size: 12px;
+  color: #817360;
+  font-size: 13px;
   padding: 8px 0 14px;
 }
 .commerce-thinking > svg,
@@ -566,8 +566,8 @@
 }
 .commerce-composer-wrap {
   padding: 16px 20px 14px;
-  background: #fff;
-  border-top: 1px solid #e7ecf4;
+  background: #ffffff;
+  border-top: 1px solid #e9d7d1;
   position: sticky;
   bottom: 0;
   z-index: 1;
@@ -582,27 +582,27 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #e5ebf4;
+  border: 1px solid #e9d6ce;
   border-radius: 5px;
   padding: 6px 8px;
-  font-size: 10px;
-  color: #7c8fae;
+  font-size: 12px;
+  color: #82735e;
 }
 .commerce-quick-prompts button:hover:not(:disabled) {
-  background: #f5f8fe;
+  background: #fae0d6;
 }
 .commerce-composer {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  border: 1px solid #dce5f4;
+  border: 1px solid #ebcfc4;
   border-radius: 9px;
   padding: 10px 10px 10px 14px;
-  background: #fff;
+  background: #ffffff;
 }
 .commerce-composer:focus-within {
-  border-color: #9bb5ed;
-  box-shadow: 0 0 0 3px #edf3ff;
+  border-color: #e6a086;
+  box-shadow: 0 0 0 3px #fcdacd;
 }
 .commerce-composer textarea {
   font: inherit;
@@ -616,10 +616,10 @@
   max-height: 150px;
   font-size: 13px;
   line-height: 1.7;
-  color: #425d83;
+  color: #784e3f;
 }
 .commerce-composer textarea::placeholder {
-  color: #9aa8be;
+  color: #81735e;
 }
 .commerce-composer button {
   display: grid;
@@ -628,11 +628,11 @@
   height: 35px;
   flex-shrink: 0;
   background: var(--blue);
-  color: #fff;
+  color: #ffffff;
   border-radius: 7px;
 }
 .commerce-composer button:disabled {
-  background: #afbddc;
+  background: #d2ab9d;
   opacity: 0.55;
 }
 .commerce-composer-note {
@@ -640,9 +640,9 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 10px;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.7;
-  color: #94a1b6;
+  color: #807460;
   padding-top: 9px;
 }
 .commerce-composer-note > span:first-child {
@@ -653,7 +653,7 @@
 .commerce-send-error {
   padding: 0 0 10px;
   color: #a15c3d;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
 }
 .commerce-sidebar {
@@ -666,31 +666,31 @@
 }
 .commerce-proposal {
   padding: 23px;
-  border: 1px solid #e1e7f2;
+  border: 1px solid #e7d3cb;
   border-radius: 12px;
-  background: #fff;
+  background: #ffffff;
 }
 .commerce-proposal.has-proposal {
-  border-color: #cad7f5;
+  border-color: #eec2b1;
 }
 .commerce-panel-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  color: #8a9ab5;
+  color: #81735d;
 }
 .commerce-panel-title h2 {
   font-size: 20px;
   line-height: 1.5;
-  color: #3a5275;
+  color: #64584b;
   margin-top: 6px;
   font-weight: 600;
   letter-spacing: -0.6px;
 }
 .commerce-proposal-intro {
-  font-size: 12px;
-  color: #8796ae;
+  font-size: 13px;
+  color: #817360;
   line-height: 1.85;
   margin: 17px 0 12px;
 }
@@ -698,18 +698,18 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: #607da4;
+  font-size: 13px;
+  color: #82735e;
   margin-bottom: 8px;
 }
 .commerce-proposal-item {
   padding: 17px 0;
-  border-bottom: 1px solid #e8edf5;
+  border-bottom: 1px solid #ead8d1;
 }
 .commerce-proposal-item h3 {
   font-size: 13px;
   line-height: 1.7;
-  color: #566d8d;
+  color: #82735d;
   font-weight: 600;
   margin: 5px 0 14px;
   overflow-wrap: anywhere;
@@ -719,19 +719,19 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  font-size: 11px;
-  color: #7d91ae;
+  font-size: 12px;
+  color: #81735e;
 }
 .commerce-target-quantity strong {
   font-family: "IBM Plex Mono", monospace;
   font-size: 18px;
-  color: #526e9b;
+  color: #81735e;
   white-space: nowrap;
   font-weight: 500;
 }
 .commerce-current-quantity {
-  font-size: 10px;
-  color: #99a7bd;
+  font-size: 12px;
+  color: #81735e;
   margin-top: 6px;
   line-height: 1.7;
 }
@@ -739,13 +739,13 @@
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 11px;
-  color: #8395ae;
+  font-size: 12px;
+  color: #81735f;
   line-height: 1.7;
   margin-top: 13px;
 }
 .commerce-unit-price > span:last-child {
-  color: #607b9f;
+  color: #81735d;
   white-space: nowrap;
 }
 .commerce-proposal-total {
@@ -753,15 +753,15 @@
 }
 .commerce-proposal-total > span {
   display: block;
-  font-size: 11px;
-  color: #899bb5;
+  font-size: 12px;
+  color: #81735e;
 }
 .commerce-proposal-total > strong {
   display: block;
   font-size: 28px;
   line-height: 1.4;
   letter-spacing: -1px;
-  color: #3e5f92;
+  color: #864f3c;
   font-weight: 600;
   margin-top: 6px;
   overflow-wrap: anywhere;
@@ -770,9 +770,9 @@
   display: flex;
   align-items: flex-start;
   gap: 5px;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.7;
-  color: #96a4b8;
+  color: #80745f;
   margin-bottom: 16px;
 }
 .commerce-confirm-button {
@@ -781,7 +781,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13px;
   padding: 13px 10px;
 }
 .commerce-no-mutation {
@@ -789,9 +789,9 @@
   align-items: flex-start;
   justify-content: center;
   gap: 5px;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.8;
-  color: #93a1b7;
+  color: #80745f;
   margin-top: 12px;
   text-align: center;
 }
@@ -803,60 +803,60 @@
   place-items: center;
   width: 58px;
   height: 60px;
-  background: #f5f8ff;
-  border: 1px solid #e7eefc;
+  background: #fddfd4;
+  border: 1px solid #f7d6ca;
   border-radius: 11px;
-  color: #98add0;
+  color: #a3664e;
   margin-bottom: 21px;
 }
 .commerce-proposal-empty h3 {
   font-size: 14px;
   line-height: 1.6;
-  color: #637da3;
+  color: #82735e;
   font-weight: 600;
 }
 .commerce-proposal-empty > p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.9;
-  color: #8d9bb1;
+  color: #807360;
   margin-top: 10px;
 }
 .commerce-request-example {
   display: flex;
   align-items: center;
   gap: 9px;
-  border-top: 1px solid #ebeff5;
+  border-top: 1px solid #e9dbd5;
   padding-top: 17px;
   margin-top: 20px;
-  color: #8a9cb7;
-  font-size: 11px;
+  color: #81735d;
+  font-size: 12px;
   line-height: 1.8;
 }
 .commerce-cart-summary {
-  border: 1px solid #e4eaf4;
+  border: 1px solid #ead5cd;
   border-radius: 9px;
   padding: 18px 20px;
-  background: #fff;
+  background: #ffffff;
 }
 .commerce-cart-heading {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #8194b3;
+  color: #82735e;
 }
 .commerce-cart-heading h3 {
   font-size: 13px;
-  color: #5f7698;
+  color: #82735e;
   font-weight: 600;
 }
 .commerce-cart-heading > span {
   margin-left: auto;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  background: #edf3ff;
+  font-size: 12px;
+  background: #fcdacd;
   border-radius: 4px;
   padding: 2px 6px;
-  color: #6b88b7;
+  color: #a16752;
 }
 .commerce-cart-total {
   display: flex;
@@ -866,13 +866,13 @@
   margin: 17px 0;
 }
 .commerce-cart-total > span {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
-  color: #94a2b8;
+  color: #80745f;
 }
 .commerce-cart-total > strong {
   font-size: 15px;
-  color: #567499;
+  color: #82735e;
   line-height: 1.4;
   white-space: nowrap;
 }
@@ -882,17 +882,17 @@
   justify-content: space-between;
   width: 100%;
   gap: 7px;
-  color: #5d82c6;
-  font-size: 11px;
-  border-top: 1px solid #eaf0f6;
+  color: #be6e51;
+  font-size: 12px;
+  border-top: 1px solid #ebdad3;
   padding-top: 13px;
 }
 .commerce-scope {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  color: #8d9db5;
-  font-size: 10px;
+  color: #81735e;
+  font-size: 12px;
   line-height: 1.9;
   padding: 0 8px;
 }
@@ -904,17 +904,17 @@
   align-items: flex-start;
   gap: 9px;
   padding: 13px 8px;
-  color: #93a6c2;
+  color: #82735e;
 }
 .commerce-sidebar-note p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
-  color: #8a9bb5;
+  color: #81735d;
 }
 .commerce-layout button:focus-visible,
 .commerce-layout summary:focus-visible,
 .commerce-layout a:focus-visible {
-  outline: 3px solid #a3bcf5;
+  outline: 3px solid #f0a68c;
   outline-offset: 4px;
 }
 .commerce-layout details > summary {
@@ -941,7 +941,7 @@
   }
   .commerce-check-values,
   .commerce-check-values > strong {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 @media (max-width: 1150px) {
@@ -965,7 +965,7 @@
     font-size: 25px;
   }
   .commerce-confirm-button {
-    font-size: 11px;
+    font-size: 12px;
   }
   .commerce-product-facts {
     flex-wrap: wrap;
@@ -1021,10 +1021,10 @@
     gap: 6px;
   }
   .commerce-conversation-head strong {
-    font-size: 11px;
+    font-size: 12px;
   }
   .commerce-location {
-    font-size: 10px;
+    font-size: 12px;
   }
   .commerce-thread {
     padding: 17px 13px;
@@ -1040,14 +1040,14 @@
     margin-bottom: 22px;
   }
   .commerce-welcome > .commerce-eyebrow {
-    font-size: 9px;
+    font-size: 11px;
   }
   .commerce-welcome h2 {
     font-size: 29px;
     letter-spacing: -1px;
   }
   .commerce-welcome > p {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.9;
   }
   .commerce-process {
@@ -1055,7 +1055,7 @@
     margin: 23px 0;
   }
   .commerce-process > span {
-    font-size: 9px;
+    font-size: 11px;
     gap: 4px;
   }
   .commerce-process > span > svg {
@@ -1068,10 +1068,10 @@
     padding: 12px 13px;
   }
   .commerce-start-prompts strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .commerce-start-prompts small {
-    font-size: 10px;
+    font-size: 12px;
   }
   .commerce-message.user {
     max-width: 94%;
@@ -1079,23 +1079,23 @@
   }
   .commerce-message.user p,
   .commerce-answer {
-    font-size: 12px;
+    font-size: 13px;
   }
   .commerce-answer {
     line-height: 1.95;
   }
   .commerce-assistant-head > span:last-child:not(.commerce-symbol) {
-    font-size: 8px;
+    font-size: 11px;
   }
   .commerce-evidence > summary {
     padding: 12px;
     gap: 8px;
   }
   .commerce-evidence > summary strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .commerce-evidence > summary small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .commerce-check-group {
     padding: 0 10px;
@@ -1111,13 +1111,13 @@
   }
   .commerce-check-values,
   .commerce-check-values > strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .commerce-check-heading {
-    font-size: 9px;
+    font-size: 11px;
   }
   .commerce-evidence-note {
-    font-size: 9px;
+    font-size: 11px;
     padding: 11px;
   }
   .commerce-product {
@@ -1134,29 +1134,29 @@
     width: 19px;
   }
   .commerce-product h3 {
-    font-size: 12px;
+    font-size: 13px;
   }
   .commerce-product-sku {
-    font-size: 9px;
+    font-size: 11px;
   }
   .commerce-product-facts {
     gap: 8px;
   }
   .commerce-product-facts dt {
-    font-size: 9px;
+    font-size: 11px;
   }
   .commerce-product-facts dd {
-    font-size: 12px;
+    font-size: 13px;
   }
   .commerce-product-source {
-    font-size: 8px;
+    font-size: 11px;
   }
   .commerce-product-actions {
     gap: 8px;
     flex-wrap: wrap;
   }
   .commerce-product-actions button {
-    font-size: 10px;
+    font-size: 12px;
   }
   .commerce-composer-wrap {
     padding: 12px 11px 11px;
@@ -1166,7 +1166,7 @@
     gap: 5px;
   }
   .commerce-quick-prompts button {
-    font-size: 9px;
+    font-size: 11px;
     gap: 4px;
     padding: 5px;
   }
@@ -1178,7 +1178,7 @@
     min-height: 48px;
   }
   .commerce-composer-note {
-    font-size: 9px;
+    font-size: 11px;
   }
   .commerce-sidebar {
     display: flex;
@@ -1210,10 +1210,10 @@
     padding: 14px 12px;
   }
   .commerce-proposal-expiry {
-    font-size: 10px;
+    font-size: 12px;
   }
   .commerce-no-mutation {
-    font-size: 10px;
+    font-size: 12px;
   }
   .commerce-cart-total > strong {
     font-size: 18px;
@@ -1222,17 +1222,17 @@
     font-size: 14px;
   }
   .commerce-cart-summary > button {
-    font-size: 12px;
+    font-size: 13px;
   }
   .commerce-scope {
     padding: 0 9px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .commerce-sidebar-note {
     padding: 0 9px 5px;
   }
   .commerce-thinking {
-    font-size: 11px;
+    font-size: 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

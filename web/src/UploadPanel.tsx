@@ -1,8 +1,7 @@
-import { useRef, useState, type DragEvent } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
 import {
   ArrowDownToLine,
   ArrowRight,
-  Check,
   FileCheck2,
   FileSpreadsheet,
   FileText,
@@ -16,13 +15,20 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
+import type { Cart, ChatResponse, Warehouse } from "./api";
+import UploadResult from "./UploadResult";
 import type { DocumentLineDraft, ReviewedDocument } from "./useCommerce";
 
 interface UploadPanelProps {
   document: ReviewedDocument | null;
+  result: ChatResponse | null;
+  cart: Cart | null;
+  warehouses: Warehouse[];
+  warehouseId: string;
   ready: boolean;
   busy: boolean;
   warehouseName: string;
+  onConfirm: () => void;
   onUpload: (file: File) => Promise<void>;
   onChangeLine: (
     id: string,
@@ -61,45 +67,16 @@ function validateLine(line: DocumentLineDraft) {
   };
 }
 
-function Workflow({ reviewing }: { reviewing: boolean }) {
-  return (
-    <ol className="upload-workflow" aria-label="Этапы подготовки спецификации">
-      <li
-        className={reviewing ? "complete" : "active"}
-        aria-current={!reviewing ? "step" : undefined}
-      >
-        <span>{reviewing ? <Check size={14} /> : "1"}</span>
-        <div>
-          <strong>Загрузить</strong>
-          <small>Один исходный файл</small>
-        </div>
-      </li>
-      <li
-        className={reviewing ? "active" : ""}
-        aria-current={reviewing ? "step" : undefined}
-      >
-        <span>2</span>
-        <div>
-          <strong>Проверить строки</strong>
-          <small>Товар, количество, единица</small>
-        </div>
-      </li>
-      <li>
-        <span>3</span>
-        <div>
-          <strong>Сверить с каталогом</strong>
-          <small>Получить предложение</small>
-        </div>
-      </li>
-    </ol>
-  );
-}
-
 export default function UploadPanel({
   document,
+  result,
+  cart,
+  warehouses,
+  warehouseId,
   ready,
   busy,
   warehouseName,
+  onConfirm,
   onUpload,
   onChangeLine,
   onPropose,
@@ -107,6 +84,7 @@ export default function UploadPanel({
   onOpenChat,
 }: UploadPanelProps) {
   const fileInput = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
   const dragDepth = useRef(0);
   const [dragging, setDragging] = useState(false);
   const [localError, setLocalError] = useState("");
@@ -118,6 +96,15 @@ export default function UploadPanel({
     Object.values(validateLine(line)).some(Boolean),
   ).length;
   const tooManyLines = (document?.lines.length ?? 0) > 50;
+  useEffect(() => {
+    if (!result) return;
+    resultRef.current?.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  }, [result]);
   const valid = Boolean(
     document && selectedLines.length > 0 && invalidCount === 0 && !tooManyLines,
   );
@@ -202,7 +189,6 @@ export default function UploadPanel({
       aria-label="Загрузка и проверка спецификации"
       aria-busy={busy || activity !== null}
     >
-      <Workflow reviewing={document !== null} />
       {localError && (
         <div className="upload-local-error" role="alert">
           <TriangleAlert size={18} />
@@ -259,23 +245,12 @@ export default function UploadPanel({
                 <span />
                 <span />
               </div>
-              <span className="upload-eyebrow">
-                Из документа — в проверенный список
-              </span>
               <h2>
-                {dragging ? (
-                  "Отпустите файл здесь"
-                ) : (
-                  <>
-                    Весь комплект.
-                    <br />
-                    <span>С одного листа.</span>
-                  </>
-                )}
+                {dragging ? "Отпустите файл здесь" : "Загрузите список"}
               </h2>
               <p>
-                Загрузите спецификацию, проверьте распознанные строки и
-                сопоставьте их с каталогом выбранного склада.
+                Строки можно проверить и исправить до сверки с каталогом.
+                Корзина при загрузке не меняется.
               </p>
               <input
                 ref={fileInput}
@@ -303,27 +278,17 @@ export default function UploadPanel({
               <span className="upload-drop-hint">
                 или перетащите один файл в эту область
               </span>
-              <div
-                className="upload-formats"
-                aria-label="Поддерживаемые форматы"
-              >
-                <span>XLSX</span>
-                <span>DOCX</span>
-                <span>PDF</span>
-                <span>JPEG</span>
-              </div>
               <p className="upload-drop-limit">
-                До 10 МБ · до 50 строк · PDF до 10 страниц
+                XLSX, DOCX, текстовый PDF, JPEG · до 10 МБ · до 50 строк · PDF
+                до 10 страниц
               </p>
             </div>
-            <div className="upload-examples">
-              <div className="upload-examples-heading">
+
+            <details className="upload-fold">
+              <summary>
                 <FileCheck2 size={17} />
-                <div>
-                  <h3>Попробуйте на учебном образце</h3>
-                  <p>Скачайте файл и загрузите его в поле выше.</p>
-                </div>
-              </div>
+                Нет файла? Возьмите учебный образец
+              </summary>
               <div className="upload-example-links">
                 {examples.map(({ extension, label, Icon }) => (
                   <a
@@ -340,66 +305,89 @@ export default function UploadPanel({
                   </a>
                 ))}
               </div>
+              <p className="upload-fold-note">
+                Скачайте файл и загрузите его в поле выше — сценарий работает
+                без сети.
+              </p>
+            </details>
+
+            <details className="upload-fold">
+              <summary>
+                <ListChecks size={17} />
+                Требования к документу
+              </summary>
+              <div className="upload-instruction-row">
+                <span>01</span>
+                <div>
+                  <strong>Название или артикул</strong>
+                  <p>
+                    У каждой позиции должно быть понятное обозначение товара.
+                  </p>
+                </div>
+              </div>
+              <div className="upload-instruction-row">
+                <span>02</span>
+                <div>
+                  <strong>Количество и единица</strong>
+                  <p>
+                    Используйте целые штуки или метры. Пропуски можно исправить
+                    после загрузки.
+                  </p>
+                </div>
+              </div>
+              <div className="upload-instruction-row">
+                <span>03</span>
+                <div>
+                  <strong>Читаемый документ</strong>
+                  <p>
+                    Для PDF нужен текстовый слой. Старые XLS, DOC и
+                    сканированные PDF не поддерживаются.
+                  </p>
+                </div>
+              </div>
+              <div className="upload-photo-note">
+                <Image size={18} />
+                <p>
+                  Без сети распознаётся учебный JPEG из образцов. Для других
+                  фотографий нужно подключённое распознавание; если оно
+                  недоступно, используйте текстовый документ.
+                </p>
+              </div>
+            </details>
+
+            <div className="upload-start-foot">
+              <p className="upload-safe-note">
+                <ShieldCheck size={17} />
+                <span>Загрузка файла не добавляет товары в корзину.</span>
+              </p>
+              <button
+                type="button"
+                className="upload-chat-link"
+                onClick={onOpenChat}
+              >
+                <MessageSquare size={16} />
+                Описать задачу в чате
+                <ArrowRight size={15} />
+              </button>
             </div>
           </div>
-          <aside className="upload-instructions">
-            <span className="upload-eyebrow">Перед загрузкой</span>
-            <h3>
-              Оставьте в списке
-              <br />
-              то, что нужно купить.
-            </h3>
-            <div className="upload-instruction-row">
-              <span>01</span>
-              <div>
-                <strong>Название или артикул</strong>
-                <p>У каждой позиции должно быть понятное обозначение товара.</p>
-              </div>
-            </div>
-            <div className="upload-instruction-row">
-              <span>02</span>
-              <div>
-                <strong>Количество и единица</strong>
-                <p>
-                  Используйте целые штуки или метры. Пропуски можно исправить
-                  после загрузки.
-                </p>
-              </div>
-            </div>
-            <div className="upload-instruction-row">
-              <span>03</span>
-              <div>
-                <strong>Читаемый документ</strong>
-                <p>
-                  Для PDF нужен текстовый слой. Старые XLS, DOC и сканированные
-                  PDF не поддерживаются.
-                </p>
-              </div>
-            </div>
-            <div className="upload-photo-note">
-              <Image size={18} />
-              <p>
-                Без сети распознаётся учебный JPEG из образцов. Для других
-                фотографий нужно подключённое распознавание; если оно
-                недоступно, используйте текстовый документ.
-              </p>
-            </div>
-            <p className="upload-safe-note">
-              <ShieldCheck size={17} />
-              <span>Загрузка файла не добавляет товары в корзину.</span>
-            </p>
-            <button
-              type="button"
-              className="upload-chat-link"
-              onClick={onOpenChat}
-            >
-              <MessageSquare size={16} />
-              Описать задачу в чате
-              <ArrowRight size={15} />
-            </button>
-          </aside>
         </div>
       ) : (
+        <>
+        {result && (
+          <div ref={resultRef} className="upload-result-slot">
+            <UploadResult
+              latest={result}
+              cart={cart}
+              warehouses={warehouses}
+              warehouseId={warehouseId}
+              busy={busy || activity !== null}
+              ready={ready}
+              onConfirm={onConfirm}
+              onOpenChat={onOpenChat}
+            />
+          </div>
+        )}
         <div className="upload-review-layout">
           <div className="upload-review-main">
             <header className="upload-document-heading">
@@ -685,6 +673,7 @@ export default function UploadPanel({
             </button>
           </aside>
         </div>
+        </>
       )}
     </section>
   );
