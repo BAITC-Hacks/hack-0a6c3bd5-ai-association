@@ -32,3 +32,9 @@ product_id,warehouse_id,quantity
 900000001,astana,
 900000001,almaty,0
 900000001,shymkent,
+900000160,astana,12
+900000160,almaty,6
+900000160,shymkent,0
+900000161,astana,0
+900000161,almaty,0
+900000161,shymkent,0

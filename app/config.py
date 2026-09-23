@@ -15,6 +15,7 @@ class Settings:
     data_dir: Path
     web_dir: Path
     demo_mode: bool = True
+    allowed_origins: tuple[str, ...] = ("http://127.0.0.1:5173", "http://localhost:5173")
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -27,4 +28,5 @@ class Settings:
             data_dir=ROOT / "data",
             web_dir=ROOT / "web/dist",
             demo_mode=mode == "1",
+            allowed_origins=tuple(value.strip() for value in os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:5173,http://localhost:5173").split(",") if value.strip()),
         )
